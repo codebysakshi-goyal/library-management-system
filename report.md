@@ -12,6 +12,8 @@ code { background: #ffffff !important; }
 **University:** Panjab University, Chandigarh  
 **Session:** 2024-2025  
 **Project Guide:** Lt. Harpreet Kaur
+**Deployment Platform:** Render  
+**Live Website URL:** `https://your-render-app-url.onrender.com`
 
 ---
 
@@ -97,18 +99,21 @@ Finally, I acknowledge all those who directly or indirectly contributed to the c
 9. Folder Structure  
 10. Code Explanation  
 11. How To Run This Project  
-12. Screenshots  
-13. Advantages  
-14. Limitations  
-15. Future Scope  
-16. Conclusion  
-17. Bibliography
+12. Deployment  
+13. Screenshots  
+14. Advantages  
+15. Limitations  
+16. Future Scope  
+17. Conclusion  
+18. Bibliography
 
 ---
 
 # SYNOPSIS
 
 ## Project Overview
+
+**Live Website URL:** `https://your-render-app-url.onrender.com`
 
 The **Library Management System** is a web-based application developed to manage the routine activities of a college library in a simple, organized, and efficient manner. The project provides separate access for administrators and students, allowing both types of users to perform their required tasks through a user-friendly interface. The main purpose of the system is to reduce manual paperwork and improve the management of books, student records, and issue-return transactions.
 
@@ -707,17 +712,48 @@ https://github.com/username/library-management-system
 Steps to Run:
 1. Download or clone the project from the repository.
 2. Open terminal in the project folder.
-3. Move to backend folder:
-   cd backend
-4. Install required packages:
+3. Install required packages:
    npm install
-5. Start the server:
+4. Start the server:
    npm run dev
    or
    npm start
-6. Open browser and visit:
+5. Open browser and visit:
    http://localhost:5000
 ```
+
+---
+
+# DEPLOYMENT
+
+The project has been prepared for deployment on **Render**, which is a cloud platform used to host web applications. Render was selected because it is simple to use, beginner-friendly, and suitable for Node.js and Express.js projects. It allows the application to be deployed directly from a GitHub repository with minimal configuration.
+
+## Platform Used
+
+- **Deployment Platform:** Render
+- **Application Type:** Web Service
+- **Backend Runtime:** Node.js
+- **Database Used:** SQLite
+- **Live Website URL:** `https://your-render-app-url.onrender.com`
+
+## Deployment Process
+
+The deployment process followed for this project is given below:
+
+1. The project source code was uploaded to GitHub.
+2. The repository was connected to Render.
+3. A new Web Service was created on Render.
+4. The build command was set to `npm install`.
+5. The start command was set to `npm start`.
+6. The environment variable `JWT_SECRET` was added in Render.
+7. After deployment, Render generated a public website URL.
+8. The application health was verified using the running server response.
+
+## Deployment URL
+
+The deployed project can be accessed using the following public link:
+
+**Website URL:** `https://your-render-app-url.onrender.com`
 
 ## Default Login Credentials
 

@@ -13,6 +13,7 @@ Read the files in this order:
 7. `07-database-and-api.md`
 8. `08-complete-working-flow.md`
 9. `09-viva-preparation.md`
+10. `10-deployment-guide.md`
 
 ## Goal of This Documentation
 
@@ -25,6 +26,7 @@ After reading all files, you should understand:
 - how folder structure works
 - how frontend and backend work
 - how routes, controllers, middleware, and database work
+- how deployment works on Render
 - how to answer viva questions
 
 ## Important Note
