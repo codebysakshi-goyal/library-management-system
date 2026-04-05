@@ -1,235 +1,170 @@
 # Features And User Flow
 
-## Main Features of the Project
+## Functional Scope
 
-This project has two main sides:
+The project supports the day-to-day workflows required in a small academic library:
 
-- admin side
-- student side
+- user authentication
+- student onboarding
+- book catalog management
+- issue and return management
+- profile updates
+- status monitoring for overdue books
 
 ## Admin Features
 
-Admin is the main controller of the system.
+Admin users have the highest operational access in the system.
 
-Admin can do the following:
+### Authentication
 
-### 1. Admin Login
+- log in through `login.html`
+- access protected admin pages after successful JWT-based login
 
-Admin can log in using the default account:
+### Dashboard
 
-- Email: `admin@library.com`
-- Password: `admin123`
-
-### 2. Dashboard
-
-Admin dashboard shows:
+The admin dashboard builds a summary from books, students, and issues data. It shows:
 
 - total books
 - total students
-- total issued books
-- total available books
-- recently added books
-- recent issue records
+- currently issued books
+- available copies
+- recent books
+- recent issue activity
 
-### 3. Manage Books
+### Book Management
 
-Admin can:
+Admin users can:
 
-- add a new book
-- view all books
-- search books
+- create new book records
+- search books by title or author
 - filter books by category
-- edit book details
-- delete a book
+- update title, author, category, copies, shelf location, and description
+- delete books that have no active issue record
 
-### 4. Manage Students
+### Student Management
 
-Admin can:
+Admin users can:
 
-- see student list
-- view student details
-- see issue history of a student
+- view all student accounts
+- open detailed student pages
+- inspect a student’s issue history
+- delete a student only when no active issue exists
 
-### 5. Issue Book
+### Issue And Return
 
-Admin can issue a book to a student by selecting:
+Admin users can:
 
-- student
-- book
-- due date
-
-### 6. Return Book
-
-Admin can mark an issued book as returned.
-
-When book is returned:
-
-- issue record status becomes `returned`
-- return date is stored
-- available copies increase by 1
-
-### 7. Issued Records Page
-
-Admin can view all issue records with:
-
-- student name
-- book title
-- issue date
-- due date
-- return date
-- status
-- overdue status
+- issue a book to a selected student
+- choose a due date
+- return an issued book from the issued-records screen
+- review overdue status on active issues
 
 ## Student Features
 
-Student has fewer rights than admin.
+Student users interact with the library catalog and their own account.
 
-Student can do the following:
+### Registration And Login
 
-### 1. Student Registration
+- register through `register.html`
+- log in through `login.html`
+- store token and user state in local storage after login
 
-New student can create an account from the register page.
+### Student Dashboard
 
-Required fields:
+The student dashboard summarizes the current user’s borrowing data, including:
 
-- full name
-- email
-- password
-- roll number
-- course
-- phone number
-
-### 2. Student Login
-
-Student can log in with registered credentials.
-
-### 3. Student Dashboard
-
-Student dashboard shows:
-
-- total issued books
-- overdue books
+- total issued records
+- active issued books
 - returned books
-- role
+- overdue records
 
-### 4. View Books
+### Catalog Browsing
 
-Student can:
+Students can:
 
-- see all books
+- list all books
 - search by title or author
 - filter by category
-- view availability
+- check availability status
+- open a full details page for a single book
 
-### 5. View Book Details
+### My Issued Books
 
-Student can open a single book page and see:
+Students can review their own issue history with:
 
 - title
 - author
 - category
-- ISBN
-- shelf location
-- description
-- availability
-
-### 6. My Issued Books
-
-Student can see only their own issue records:
-
-- book title
-- author
-- category
 - issue date
 - due date
 - return date
 - status
-- overdue status
+- overdue flag
 
-### 7. Update Profile
+### Profile
 
-Student can update:
+Students can update:
 
 - full name
 - course
 - phone number
 
-Student cannot change:
+Students cannot change email, roll number, or role through the profile form.
 
-- email
-- roll number
-- role
+## Business Rules
 
-## Role-Based Access
+The controllers enforce a set of domain rules that protect data consistency.
 
-This project uses **role-based access control**.
+### User Rules
 
-That means:
-
-- admin pages are only for admin
-- student pages are only for student
-
-If a user tries to open the wrong page, the system sends them to `unauthorized.html`.
-
-## Feature List in Simple Viva Language
-
-You can say:
-
-> The project has two roles: admin and student. Admin can manage books, students, issue records, and returns. Student can register, login, view books, view issued books, and update profile. The project also supports search, filter, authentication, authorization, and overdue status.
-
-## Step-by-Step User Flow
-
-## Public Flow
-
-1. User opens `index.html`
-2. User chooses login or registration
-
-## Student Flow
-
-1. Student registers from `register.html`
-2. Student logs in from `login.html`
-3. Token and user data are saved in browser local storage
-4. Student is redirected to `student-dashboard.html`
-5. Student can open books page, book details page, my issued books page, and profile page
-
-## Admin Flow
-
-1. Admin logs in from `login.html`
-2. Token and user data are saved in local storage
-3. Admin is redirected to `admin-dashboard.html`
-4. Admin can open books, students, issue book, issued records, and profile pages
-
-## Important Business Rules in This Project
-
-These are very important for viva because they show project logic.
+- email must be unique
+- roll number must be unique for students
+- a student account cannot be deleted if active issued books exist
 
 ### Book Rules
 
-- book ISBN must be unique
-- total copies must be at least 1
-- available copies cannot go below 0
-- a book cannot be deleted if it is currently issued
-
-### Student Rules
-
-- email must be unique
-- roll number must be unique
-- student cannot be deleted if there is an active issued book
+- ISBN must be unique
+- total copies must be at least `1`
+- available copies are recalculated when total copies change
+- a book cannot be deleted while actively issued
 
 ### Issue Rules
 
-- only admin can issue books
-- only admin can return books
-- due date cannot be before today
-- a book cannot be issued if available copies are 0
-- same student cannot have the same book issued twice at the same time
+- only admin users can create or return issues
+- due date cannot be earlier than the current date
+- a student cannot hold two active issues for the same book
+- issuing a book decreases `available_copies`
+- returning a book increases `available_copies`
+- overdue is true only when status is `issued` and the due date has passed
 
-## Important for Viva
+## Navigation Flow
 
-If examiner asks, “What are the major modules of your project?”, answer:
+### Public Flow
 
-> The main modules are authentication module, book management module, student management module, issue and return module, dashboard module, profile module, and role-based access module.
+1. A user opens `/`, which serves `public/index.html`.
+2. The public landing page links to login and registration pages.
 
-## Summary
+### Student Flow
 
-The project supports all basic library activities needed in a college environment. Admin handles management work, and students can access only their own useful information.
+1. Student registers or logs in.
+2. `public/js/auth.js` sends the request to `/api/auth/...`.
+3. Successful login stores token and user data in local storage.
+4. The student is redirected to `student-dashboard.html`.
+5. From there the student can navigate to books, issue history, and profile pages.
+
+### Admin Flow
+
+1. Admin logs in.
+2. The same auth flow stores token and user details in local storage.
+3. The admin is redirected to `admin-dashboard.html`.
+4. From there the admin can move to books, students, issue-book, issued-records, and profile pages.
+
+## Access Control Flow
+
+The frontend and backend both participate in access control:
+
+- frontend guards pages with helper functions such as `requireAuth`
+- backend validates JWTs with `authMiddleware`
+- backend restricts privileged actions with `roleMiddleware("admin")` or `roleMiddleware("student")`
+
+If a user reaches a page without the required role, the UI redirects them to `unauthorized.html`.

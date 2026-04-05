@@ -1,8 +1,8 @@
 # Documentation Index
 
-This folder is made for your personal learning and viva preparation.
+This folder contains project-learning documentation for the current codebase. The files are written to explain the real repository structure, runtime flow, APIs, database design, and deployment setup used by the application.
 
-Read the files in this order:
+## Recommended Reading Order
 
 1. `01-project-overview.md`
 2. `02-features-and-user-flow.md`
@@ -15,27 +15,25 @@ Read the files in this order:
 9. `09-viva-preparation.md`
 10. `10-deployment-guide.md`
 
-## Goal of This Documentation
+## What You Will Learn
 
-After reading all files, you should understand:
+After reading the full set, a reader should understand:
 
-- what the project is
-- what features it has
-- what technologies are used
-- why those technologies were chosen
-- how folder structure works
-- how frontend and backend work
-- how routes, controllers, middleware, and database work
-- how deployment works on Render
-- how to answer viva questions
+- what problem the project solves
+- how admin and student flows work
+- how the frontend and backend are organized
+- how authentication and authorization are enforced
+- how books, students, and issue records are stored
+- how the API surface maps to the UI
+- how the app starts, serves files, and initializes the database
+- how the project is deployed and monitored
 
-## Important Note
+## Current Architecture Reference
 
-These notes are written in very simple language and are based on the actual code present in your project.
+- Root `server.js` is the repository entrypoint.
+- `backend/server.js` hosts the Express application.
+- `public/` contains the active frontend assets and pages.
+- `backend/database/library.db` is the default runtime database file.
+- `documentation/pdf/` stores PDF exports generated from these markdown files.
 
-Current structure note:
-
-- root `server.js` and `package.json` are used to start the project
-- `backend/` contains the main Express logic
-- `public/` contains the frontend files actually served by the app
-- `frontend/` is kept as the original source/reference copy
+`codex-plan/` is intentionally outside the documentation scope because it is only used for AI development context.

@@ -1,162 +1,91 @@
 # Project Overview
 
-## What Is This Project?
+## Purpose
 
-This project is a **Library Management System** made for a college library.
+Campus Library Management System is a web application for handling routine college-library operations in a structured digital workflow. The application replaces manual register-based processes with authenticated pages and API-backed records for books, students, issue activity, and returns.
 
-Its main job is to help the library manage:
+## Problem It Solves
 
-- students
-- books
-- book issue records
-- book return records
-- login and security
+Traditional library operations are often handled through paper registers, spreadsheets, or informal logs. That approach creates predictable problems:
 
-In simple words, this project changes the old **manual library work** into a **digital system**.
+- slow search and verification of records
+- inconsistent tracking of available books
+- duplicated or missing entries
+- delayed issue and return updates
+- difficulty monitoring overdue books
+- limited visibility for students into their own records
 
-Instead of writing everything in registers, the librarian or admin can use this system to manage records faster and more accurately.
+This project solves those issues by centralizing records in a SQLite database and exposing role-based functionality through a browser interface.
 
-## Main Goal of the Project
+## User Roles
 
-The goal of this project is:
+The application supports two roles:
 
-- to store library data in one place
-- to reduce manual work
-- to avoid mistakes in records
-- to track which student has which book
-- to show whether a book is available or not
+### Admin
 
-## Real-Life Problem It Solves
+Admin users manage the library itself. They can:
 
-In a manual system:
+- log in with the seeded admin account
+- view the admin dashboard
+- add, update, and delete books
+- list students and inspect student history
+- issue books to students
+- mark books as returned
+- review issued-record history
 
-- book records are written by hand
-- issue and return entries take time
-- searching for a book is slow
-- checking due dates is difficult
-- mistakes can happen easily
+### Student
 
-This project solves those problems by storing everything in a database and showing it on web pages.
+Student users manage only their own account and borrowing activity. They can:
 
-## Type of Project
+- register through the public registration page
+- log in with their own credentials
+- access the student dashboard
+- browse and search books
+- open detailed book pages
+- review their own issue history
+- update profile information
 
-This is a **full stack web project**.
+## Architecture Summary
 
-That means it has two big parts:
+The application uses a straightforward multi-page full-stack architecture:
 
-1. **Frontend**
-   This is what the user sees in the browser.
-   Example: login page, dashboard, books page.
+1. The root `server.js` file starts the application by loading `backend/server.js`.
+2. `backend/server.js` creates the Express app, enables middleware, initializes the database, and serves `public/`.
+3. The frontend pages in `public/` use vanilla JavaScript to call `/api/...` endpoints.
+4. The backend routes map requests to controllers.
+5. Controllers validate data, apply business rules, run SQLite queries, and return JSON.
 
-2. **Backend**
-   This is the logic behind the scenes.
-   It checks login, stores data, reads data, updates records, and talks to the database.
+## Current Runtime Paths
 
-## Current Project Architecture
+- Entrypoint: `server.js`
+- Main Express app: `backend/server.js`
+- Active frontend: `public/`
+- Default database file: `backend/database/library.db`
+- Schema file: `backend/database/schema.sql`
+- Seed file: `backend/database/seed.sql`
 
-The current version of the project starts from the repository root.
+## Core Domain Areas
 
-- root `server.js` starts the project
-- root `package.json` contains the run scripts
-- `backend/server.js` contains the main Express app
-- `public/` contains the frontend files served in the browser
-- `database/library.db` is used as the runtime database path through environment configuration
+The project is organized around four main domains:
 
-So, the project is still full stack, but now it is also deployment-ready from the root folder.
-
-## Who Uses This Project?
-
-There are two users in this system:
-
-### 1. Admin
-
-Admin can:
-
-- manage books
-- see students
-- issue books
-- return books
-- view issue records
-- use the admin dashboard
-
-### 2. Student
-
-Student can:
-
-- register
-- login
-- view books
-- search books
-- view book details
-- see their own issued books
-- update their profile
-
-## Basic Working of the Project
-
-The flow is very simple:
-
-1. User opens the website in the browser.
-2. User logs in.
-3. Frontend sends a request to backend.
-4. Backend checks the request.
-5. Backend reads or updates the database.
-6. Backend sends a response.
-7. Frontend shows the result to the user.
-
-## Example
-
-If admin issues a book:
-
-1. Admin opens issue page.
-2. Admin selects student and book.
-3. Frontend sends issue data to backend.
-4. Backend saves a new issue record.
-5. Backend reduces available copies of that book.
-6. Frontend shows success message.
-
-## Important for Viva
-
-You can explain the project in one short answer like this:
-
-> This project is a full stack Library Management System for a college. It helps admin manage books, students, book issue and return records, and helps students view books and their own issued books. It uses HTML, CSS, JavaScript in frontend, Node.js and Express.js in backend, SQLite as database, and JWT for login authentication.
-
-## Why This Project Is Good for BCA Viva
-
-This project is good for viva because it clearly shows:
-
-- frontend and backend separation
-- database usage
 - authentication
-- role-based access
-- CRUD operations
-- real-world problem solving
+- books
+- users
+- issue records
 
-## A Few Important Technical Words
+Those domains appear consistently across routes, controllers, UI pages, and data tables.
 
-### System
+## Main Outcomes
 
-A group of parts working together.
+By design, the system provides:
 
-### User
+- central storage of student and book records
+- predictable role-based access
+- searchable book availability
+- issue and return tracking
+- visibility into overdue books
+- a deployable web interface for demonstration and practical use
 
-A person using the software.
+## Short Technical Summary
 
-### Database
-
-A place where data is stored in an organized way.
-
-### Authentication
-
-Checking who the user is.
-
-### Authorization
-
-Checking what the user is allowed to do.
-
-### Full Stack
-
-A project that has both frontend and backend.
-
-## Summary
-
-This project is a web-based college library system with admin and student roles. It helps manage books, students, issue records, and returns in a digital way.
+This is a Node.js and Express application with a static multi-page frontend and a SQLite database. Authentication uses JWT, passwords are hashed with bcryptjs, and the backend enforces role-based access for admin and student users.

@@ -1,401 +1,142 @@
 # Technologies Used
 
-## Why Technologies Matter
+## Overview
 
-Every project needs tools and technologies.
+The project uses a deliberately simple stack: server-rendered static assets from Express, vanilla JavaScript in the browser, and SQLite for persistent storage. That combination keeps the codebase easy to understand while still covering authentication, CRUD operations, and role-based access.
 
-Some technologies are used to:
+## Frontend
 
-- build pages
-- style pages
-- add logic
-- create backend
-- store data
-- secure login
+### HTML
 
-This project uses technologies that are simple, practical, and suitable for a BCA-level project.
+HTML defines the structure of the application’s pages, including:
 
-## Full Technology List
+- landing page
+- login and registration pages
+- dashboards
+- book-management pages
+- student-management pages
+- profile pages
 
-- HTML
-- CSS
-- JavaScript
-- Node.js
-- Express.js
-- SQLite
-- JWT
-- bcryptjs
-- CORS
-- dotenv
-- nodemon
-- npm
+Each page is a standalone document in `public/` and loads shared plus page-specific JavaScript.
 
-## 1. HTML
+### CSS
 
-### Full Form
+CSS is split by concern so the interface stays maintainable:
 
-HyperText Markup Language
+- `style.css` for shared visual foundations
+- `auth.css` for login and registration
+- `form.css` for form layout
+- `dashboard.css` for summary views
+- `books.css` for catalog pages
+- `table.css` for tabular admin views
+- `issue.css` for issue and records pages
+- `profile.css` for profile presentation
 
-### Purpose
+### JavaScript
 
-HTML is used to create the **structure** of web pages.
+Vanilla JavaScript powers all client-side interactivity. It handles:
 
-### In This Project
+- form submission
+- API requests
+- local storage
+- protected page checks
+- DOM rendering
+- search and filter interactions
+- status badges and message components
 
-HTML is used for pages like:
+The frontend avoids a framework and instead relies on small modular files under `public/js/`.
 
-- home page
-- login page
-- register page
-- admin dashboard
-- student dashboard
-- books pages
-- profile page
+## Backend
 
-### Example of HTML Elements
+### Node.js
 
-- headings
-- forms
-- input fields
-- buttons
-- tables
-- sections
-- links
+Node.js runs the server-side JavaScript and provides the runtime for:
 
-### Why We Chose HTML
+- Express server setup
+- file-path handling
+- environment configuration
+- database initialization
+- token generation
 
-- simple to learn
-- basic requirement for web pages
-- works directly in browser
-- good for college-level projects
+### Express.js
 
-### Important for Viva
+Express structures the backend into:
 
-You can say:
+- route modules
+- middleware
+- controllers
+- static-file serving
 
-> HTML gives the basic structure of the page, like forms, buttons, headings, tables, and containers.
+It also handles request parsing with:
 
-## 2. CSS
+- `express.json()`
+- `express.urlencoded({ extended: true })`
 
-### Full Form
+### CORS
 
-Cascading Style Sheets
+`cors` is enabled in `backend/server.js`. In the current deployment model the frontend is served from the same app, but keeping CORS enabled makes local and hosted access less brittle.
 
-### Purpose
+## Data And Security
 
-CSS is used for the **design and look** of the website.
+### SQLite
 
-### In This Project
+SQLite is the only database dependency. It works well here because:
 
-CSS is used for:
+- setup is lightweight
+- data is stored in a single file
+- relational constraints are still available
+- it supports enough SQL for the project’s queries and joins
 
-- colors
-- layout
-- spacing
-- buttons
-- forms
-- tables
-- dashboard cards
-- page styling
+The default runtime database file is `backend/database/library.db`.
 
-### CSS Files in This Project
+### bcryptjs
 
-- `style.css`
-- `auth.css`
-- `form.css`
-- `dashboard.css`
-- `books.css`
-- `table.css`
-- `issue.css`
-- `profile.css`
+`bcryptjs` hashes passwords before they are saved. The app uses it for:
 
-### Why We Chose CSS
+- hashing the seeded admin password
+- hashing new student passwords
+- comparing login attempts to stored hashes
 
-- simple and standard for styling websites
-- separates design from HTML structure
-- makes pages look neat and professional
+### jsonwebtoken
 
-### Important for Viva
+`jsonwebtoken` creates signed JWT tokens after successful login. Those tokens carry:
 
-You can say:
+- user id
+- user email
+- user role
 
-> CSS is used to make the user interface clean, readable, and user-friendly.
+The backend then verifies the token on protected routes.
 
-## 3. JavaScript
+### dotenv
 
-### Purpose
-
-JavaScript is used to add **logic and interactivity**.
-
-### In This Project
-
-JavaScript does things like:
-
-- handle form submission
-- send API requests
-- receive backend response
-- show messages
-- update page content
-- redirect users
-- save token in local storage
-
-### Frontend JavaScript Files
-
-- `api.js`
-- `common.js`
-- `auth.js`
-- `admin-dashboard.js`
-- `student-dashboard.js`
-- `admin-books.js`
-- `student-books.js`
-- `add-book.js`
-- `edit-book.js`
-- `students.js`
-- `student-details.js`
-- `issue-book.js`
-- `issued-records.js`
-- `my-issued-books.js`
-- `profile.js`
-
-### Why We Chose JavaScript
-
-- works directly in browser
-- same language is also used in backend through Node.js
-- good for simple dynamic web projects
-
-### Important for Viva
-
-You can say:
-
-> JavaScript connects frontend with backend. It sends requests, gets responses, and updates the page without writing all data manually in HTML.
-
-## 4. Node.js
-
-### Purpose
-
-Node.js lets us run JavaScript on the server side.
-
-Normally JavaScript works in browser, but Node.js allows JavaScript to run in backend also.
-
-### In This Project
-
-Node.js is used to:
-
-- run the server
-- handle backend files
-- use npm packages
-- connect logic with database
-
-### Why We Chose Node.js
-
-- easy because frontend and backend both use JavaScript
-- lightweight and popular
-- good for beginner full stack projects
-
-### Important for Viva
-
-You can say:
-
-> Node.js is the runtime environment that runs backend JavaScript code outside the browser.
-
-## 5. Express.js
-
-### Purpose
-
-Express.js is a backend framework built on Node.js.
-
-It makes backend development easier.
-
-### In This Project
-
-Express is used to:
-
-- create routes
-- receive requests
-- send responses
-- use middleware
-- connect controllers
-
-### Example
-
-- `/api/auth/login`
-- `/api/books`
-- `/api/users/students`
-- `/api/issues`
-
-### Why We Chose Express.js
-
-- simple syntax
-- widely used with Node.js
-- easy to create APIs
-- perfect for small to medium academic projects
-
-### Important for Viva
-
-You can say:
-
-> Express.js is used to build API routes and backend request handling in a simple way.
-
-## 6. SQLite
-
-### Purpose
-
-SQLite is the database used in this project.
-
-### In This Project
-
-It stores:
-
-- users
-- books
-- issue records
-
-### Why We Chose SQLite
-
-- lightweight
-- file-based
-- no separate server required
-- easy for college projects
-- supports SQL queries and table relationships
-
-### Where Database Is Stored
-
-Database is used in two related places:
-
-- active runtime database file: `database/library.db`
-- schema and seed files: `backend/database/schema.sql` and `backend/database/seed.sql`
-
-### Important for Viva
-
-You can say:
-
-> We used SQLite because it is simple, lightweight, and easy to use for an academic project. It stores data in a local file, so setup is easy.
-
-## 7. JWT
-
-### Full Form
-
-JSON Web Token
-
-### Purpose
-
-JWT is used for login authentication.
-
-### How It Works Here
-
-1. User logs in
-2. Backend checks email and password
-3. Backend creates a token
-4. Frontend saves token in local storage
-5. Token is sent in later requests
-6. Backend checks token before giving protected data
-
-### Why We Chose JWT
-
-- simple token-based authentication
-- commonly used in web apps
-- works well with frontend-backend projects
-
-### Important for Viva
-
-You can say:
-
-> JWT is used to identify logged-in users and protect private routes.
-
-## 8. bcryptjs
-
-### Purpose
-
-This package is used to **hash passwords**.
-
-That means password is not stored in plain text.
-
-### Why It Is Important
-
-If database is leaked, hashed passwords are safer than normal passwords.
-
-### Important for Viva
-
-You can say:
-
-> bcryptjs is used for password security. It converts normal passwords into hashed form before storing them in the database.
-
-## 9. CORS
-
-### Full Form
-
-Cross-Origin Resource Sharing
-
-### Purpose
-
-CORS allows communication between frontend and backend when needed.
-
-### In This Project
-
-`app.use(cors())` is added in the server.
-
-### Simple Viva Explanation
-
-> CORS helps the server accept requests properly, especially when frontend and backend are communicating.
-
-## 10. dotenv
-
-### Purpose
-
-dotenv loads environment variables from a `.env` file.
-
-### In This Project
-
-It is mainly used for:
+`dotenv` loads environment variables such as:
 
 - `PORT`
 - `JWT_SECRET`
+- `DB_PATH`
 
-### Important for Viva
+## Development Tooling
 
-> dotenv is used to keep configuration values like secret key and port outside the main code.
+### npm
 
-## 11. nodemon
+`npm` is used for dependency management and scripts.
 
-### Purpose
+### nodemon
 
-nodemon automatically restarts the server when code changes.
+`nodemon` is used in development through:
 
-### Why Useful
+```bash
+npm run dev
+```
 
-Without nodemon, developer has to restart server manually again and again.
+It restarts the server automatically when backend files change.
 
-## 12. npm
+## Why This Stack Fits The Project
 
-### Full Form
+The stack is appropriate because it supports:
 
-Node Package Manager
-
-### Purpose
-
-npm is used to install packages like:
-
-- express
-- sqlite3
-- bcryptjs
-- jsonwebtoken
-
-## Why This Stack Was a Good Choice
-
-This project uses a stack that is:
-
-- beginner friendly
-- easy to explain in viva
-- practical for full stack learning
-- fast to build
-- simple to run on one computer
-
-## Important for Viva
-
-If asked, “Why did you choose these technologies?”, answer:
-
-> I chose HTML, CSS, and JavaScript for frontend because they are standard web technologies. I chose Node.js and Express.js for backend because they are simple and use JavaScript. I chose SQLite because it is lightweight and easy for a college-level project. I used JWT for authentication and bcryptjs for password security.
-
-## Summary
-
-Each technology in this project has a clear role. HTML creates structure, CSS styles the pages, JavaScript adds logic, Node.js and Express handle backend, SQLite stores data, and JWT secures login.
+- a clear frontend-backend split
+- easy local setup
+- a small deployment footprint
+- enough complexity to demonstrate authentication, authorization, CRUD, and relational data handling
+- maintainable code without heavy framework overhead

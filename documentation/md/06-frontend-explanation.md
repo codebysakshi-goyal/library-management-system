@@ -1,352 +1,212 @@
 # Frontend Explanation
 
-## What Is Frontend?
+## Frontend Role
 
-Frontend is the visible part of the project.
+The frontend is a static multi-page interface served from `public/`. Each page is written in HTML, styled with CSS, and enhanced with vanilla JavaScript. Instead of a frontend framework, the project uses small page-specific scripts plus a few shared utility files.
 
-It is what the user sees and uses in the browser.
+## Active Frontend Location
 
-In this project, frontend is made using:
+The active frontend lives entirely in:
 
-- HTML
-- CSS
-- JavaScript
+```text
+public/
+```
 
-## What Frontend Does Here
+That folder is what Express serves through `express.static(...)`, so every HTML, CSS, JavaScript, and asset file used by the running application comes from there.
 
-Frontend:
+## Shared Frontend Modules
 
-- shows pages
-- takes input from user
-- sends data to backend
-- receives backend response
-- shows output on page
-- controls navigation
+### `public/js/api.js`
 
-## Main Frontend Files
+This file centralizes client-side authentication state and API communication. It handles:
 
-Frontend has:
+- reading the stored token
+- reading the stored user object
+- saving auth data after login
+- clearing auth data on logout
+- sending requests to `/api/...`
+- adding the `Authorization` header when a token exists
 
-- HTML pages
-- CSS files
-- JavaScript files
+Because of this file, page scripts do not need to repeat fetch boilerplate.
 
-## Where Frontend Is Served From
+### `public/js/common.js`
 
-The current application serves frontend files from the `public/` folder.
+This file contains reusable UI helpers such as:
 
-The `frontend/` folder is kept as the original source/reference copy.
+- flash-message rendering
+- badge rendering
+- date formatting
+- query-string parsing
+- auth checks
+- role-based redirects
+- common navbar and footer rendering
 
-So for architecture understanding:
+These helpers keep page-specific scripts focused on their own screen logic.
 
-- `public/` = active served frontend
-- `frontend/` = source/reference copy
+### `public/js/auth.js`
 
-## Important Shared JavaScript Files
+This file powers:
 
-## 1. `api.js`
+- login form submission
+- student registration form submission
+- login success handling
+- redirecting users to the correct dashboard
 
-This is one of the most important frontend files.
+## Page Groups
 
-It handles:
+## Public Pages
 
-- token reading
-- current user reading
-- saving login data
-- clearing login data
-- sending API requests
+- `index.html`
+- `login.html`
+- `register.html`
 
-### Important Functions
+These pages are accessible without logging in.
 
-#### `getToken()`
+## Admin Pages
 
-Reads token from browser local storage.
+- `admin-dashboard.html`
+- `admin-books.html`
+- `add-book.html`
+- `edit-book.html`
+- `students.html`
+- `student-details.html`
+- `issue-book.html`
+- `issued-records.html`
 
-#### `getCurrentUser()`
+Each admin page checks authentication and role before loading protected data.
 
-Reads current user object from local storage.
+## Student Pages
 
-#### `saveAuthData(token, user)`
+- `student-dashboard.html`
+- `student-books.html`
+- `book-details.html`
+- `my-issued-books.html`
+- `profile.html`
 
-Stores token and user after login.
+Student pages either require a logged-in student or adapt to the current role, as in the shared profile page.
 
-#### `clearAuthData()`
+## Utility Pages
 
-Removes token and user when logging out.
+- `unauthorized.html`
+- `not-found.html`
 
-#### `apiRequest(endpoint, options)`
+These provide a simple fallback experience for invalid access or routes.
 
-This function is very important.
+## Admin Page Logic
 
-It:
+### `admin-dashboard.js`
 
-- adds content type
-- adds Authorization header if token exists
-- calls backend using `fetch()`
-- converts response to JSON
-- throws error if request fails
+This file loads books, students, and issue records separately, then derives the summary cards in the browser. It does not rely on a dedicated dashboard endpoint.
 
-### Important for Viva
-
-You can say:
-
-> I created a common API helper so that all frontend files can call backend in one standard way.
-
-## 2. `common.js`
-
-This file contains common frontend helper functions.
-
-### Important Functions
-
-#### `showMessage()`
-
-Shows success or error message on page.
-
-#### `createBadge()`
-
-Creates small status labels like:
-
-- Available
-- Not Available
-- Issued
-- Returned
-- Overdue
-
-#### `formatDate()`
-
-Formats date for display.
-
-#### `getQueryParam()`
-
-Reads values from URL.
-
-Example:
-
-- `edit-book.html?id=5`
-
-Here id can be read using this function.
-
-#### `redirectToDashboardByRole()`
-
-Redirects:
-
-- admin -> admin dashboard
-- student -> student dashboard
-
-#### `requireAuth(requiredRole)`
-
-Checks:
-
-- user is logged in or not
-- role is correct or not
-
-If not allowed:
-
-- sends to `login.html` or `unauthorized.html`
-
-#### `renderNavbar()` and `renderFooter()`
-
-These functions create common navbar and footer on every page.
-
-Navbar changes based on role:
-
-- guest
-- student
-- admin
-
-## Authentication Frontend
-
-## `auth.js`
-
-This file handles:
-
-- login page
-- registration page
-
-### Login Flow
-
-1. User submits login form
-2. JavaScript prevents normal page reload
-3. Form data is collected
-4. `/auth/login` API is called
-5. Token and user are saved
-6. User is redirected by role
-
-### Register Flow
-
-1. User fills register form
-2. Password length is checked
-3. `/auth/register` API is called
-4. Success message is shown
-5. User is redirected to login page
-
-## Admin Frontend Files
-
-## `admin-dashboard.js`
-
-This file:
-
-- checks admin login
-- calls books, students, and issues APIs
-- builds summary cards
-- shows recent books
-- shows recent issue records
-
-## `admin-books.js`
+### `admin-books.js`
 
 This file:
 
 - loads all books
-- supports search and category filter
-- shows books in table
-- allows delete
+- applies search and category filters
+- renders the results table
+- handles deletion actions
 
-## `add-book.js`
-
-This file:
-
-- checks admin
-- handles add-book form submission
-- sends `POST /books`
-
-## `edit-book.js`
+### `add-book.js`
 
 This file:
 
-- reads book id from URL
-- loads one book
-- fills form with old data
-- sends updated data to backend
+- validates admin access
+- reads form values
+- sends `POST /api/books`
 
-## `students.js`
-
-This file:
-
-- loads all students
-- shows them in table
-
-## `student-details.js`
+### `edit-book.js`
 
 This file:
 
-- reads student id from URL
-- gets student details
-- shows issue history of that student
+- reads the book id from the URL
+- loads the existing book details
+- pre-fills the form
+- sends `PUT /api/books/:id`
 
-## `issue-book.js`
+### `students.js`
+
+This file loads and renders the student list for admins.
+
+### `student-details.js`
+
+This file loads a selected student and that student’s issue history.
+
+### `issue-book.js`
 
 This file:
 
-- loads student list
-- loads books list
-- sets default due date to 14 days ahead
-- disables books with no available copies
-- sends issue request
+- loads available students and books
+- sets a default due date
+- disables unavailable book options
+- submits `POST /api/issues`
 
-## `issued-records.js`
+### `issued-records.js`
 
 This file:
 
 - loads all issue records
-- shows overdue badge
-- gives return button for active issued books
+- shows overdue indicators
+- allows admins to return active issues
 
-## Student Frontend Files
+## Student Page Logic
 
-## `student-dashboard.js`
+### `student-dashboard.js`
 
-This file:
+This file loads the current student’s issue data and builds the dashboard summary.
 
-- checks student login
-- gets current student issue data
-- shows summary cards
-- shows current active issues
-
-## `student-books.js`
+### `student-books.js`
 
 This file:
 
-- loads all books
-- supports search and filter
-- shows books in card format
+- loads the book catalog
+- supports searching and category filtering
+- renders book cards
 
-## `book-details.js`
+### `book-details.js`
 
-This file:
+This file loads and renders a single book using the id from the query string.
 
-- reads book id from URL
-- gets one book
-- shows full book information
+### `my-issued-books.js`
 
-## `my-issued-books.js`
+This file loads `GET /api/issues/my` and renders the student’s own issue table.
 
-This file:
+### `profile.js`
 
-- loads only current student’s issue records
-- shows status and overdue state
+This file supports both roles:
 
-## `profile.js`
+- students can update profile fields
+- admins can view profile information in read-only mode
 
-This file works for both admin and student.
+## Rendering Pattern
 
-### If current user is student
+Most pages follow the same structure:
 
-Student can update:
+1. HTML defines the layout and containers.
+2. Shared JS files are loaded first.
+3. The page-specific script checks auth and role.
+4. The script fetches data from the backend.
+5. The DOM is updated with the results.
 
-- full name
-- course
-- phone number
+## Browser Storage
 
-### If current user is admin
+The app uses local storage for:
 
-Admin can only view profile.
+- the JWT token
+- the current user object
 
-In code:
+That stored state enables:
 
-- course and phone are disabled
-- update button is hidden
+- page protection
+- role-aware navigation
+- authenticated API requests across page loads
 
-## HTML Page Pattern
+## Frontend And Backend Contract
 
-Most HTML pages follow this pattern:
+The frontend expects JSON responses with predictable shapes and uses the shared helpers to surface:
 
-1. navbar container
-2. main page content
-3. footer container
-4. shared JS files
-5. page-specific JS file
+- success messages
+- error messages
+- badges for status, availability, and overdue state
 
-## Example
-
-`login.html` includes:
-
-- `js/api.js`
-- `js/common.js`
-- `js/auth.js`
-
-This means:
-
-- `api.js` handles request helper
-- `common.js` handles shared UI helpers
-- `auth.js` handles login/register logic
-
-## How Frontend Talks To Backend
-
-Example: login
-
-1. User fills login form
-2. `auth.js` collects form data
-3. `api.js` sends request to `/api/auth/login`
-4. Backend sends token and user
-5. Frontend stores them in local storage
-6. User is redirected
-
-## Important for Viva
-
-If asked, “How does frontend know whether the user is logged in?”, answer:
-
-> Frontend stores token and user data in local storage after login. Then helper functions check local storage to protect pages and send token with API requests.
-
-## Summary
-
-Frontend is responsible for page display, form handling, API calling, role-based page access, and showing data in a user-friendly way.
+Because the frontend is modular but simple, it is easy to trace a page from HTML to its JS file to the API endpoint it calls.

@@ -1,120 +1,73 @@
 # Backend Explanation
 
-## What Is Backend?
+## Backend Responsibilities
 
-Backend is the hidden part of the project that works behind the scenes.
+The backend is responsible for:
 
-It does things like:
+- starting the HTTP server
+- serving the static frontend
+- authenticating users
+- authorizing role-based actions
+- validating incoming data
+- querying and updating SQLite
+- returning JSON responses
 
-- receive requests
-- check data
-- process logic
-- connect to database
-- send response
+## Startup Flow
 
-In this project, backend is built using:
-
-- Node.js
-- Express.js
-- SQLite
-
-## Project Entry Files
-
-This project now has two important startup files.
+The backend starts through two files:
 
 ### Root `server.js`
 
-This is the deployment entry file used by:
+The root file contains:
 
-- `npm start`
-- `npm run dev`
-- Render deployment
+```javascript
+require("./backend/server");
+```
 
-It simply loads the main Express app from `backend/server.js`.
+Its only job is to make the repository root the application entrypoint.
 
 ### `backend/server.js`
 
-This is the main backend file.
+`backend/server.js` is the real server file. It:
 
-### What It Does
+- imports `path`, `express`, `cors`, and `dotenv`
+- imports `initializeDatabase` from `backend/config/db.js`
+- registers route groups
+- serves `public/`
+- exposes the health endpoint at `GET /api/health`
+- starts listening only after the database initializes
 
-- imports required modules
-- loads environment variables
-- creates Express app
-- enables middleware
-- serves static frontend files from `public/`
-- serves `index.html` on `/`
-- connects API routes
-- adds health route
-- adds 404 handler
-- starts server after database initialization
+## Middleware Layer
 
-## Main Lines of Work in `server.js`
-
-### 1. Create App
-
-`const app = express();`
-
-This creates the Express application.
-
-### 2. Add Middleware
-
-The following middleware is used:
+The Express app applies:
 
 - `cors()`
 - `express.json()`
 - `express.urlencoded({ extended: true })`
 - `express.static(staticPath)`
 
-### 3. Register Routes
+This combination covers:
 
-These route groups are added:
+- cross-origin tolerance
+- JSON request parsing
+- form-style body parsing
+- static HTML/CSS/JS delivery
 
-- `/api/auth`
-- `/api/books`
-- `/api/users`
-- `/api/issues`
+## Route Groups
 
-### 4. Start Server
+The app exposes four route groups.
 
-Server starts only after database is initialized successfully.
+### `/api/auth`
 
-## Current Backend + Frontend Connection
-
-The backend and frontend are connected like this:
-
-- Express serves HTML, CSS, JS, and assets from `public/`
-- frontend JavaScript calls backend APIs using `/api`
-- backend returns JSON responses
-- browser updates pages using JavaScript
-
-## What Are Routes?
-
-Routes are URL paths used by frontend to talk to backend.
-
-Example:
-
-- `POST /api/auth/login`
-- `GET /api/books`
-- `POST /api/issues`
-
-Routes answer the question:
-
-**Which URL should call which function?**
-
-## Route Files
-
-## 1. `authRoutes.js`
-
-Handles authentication-related routes:
+Defined in `backend/routes/authRoutes.js`:
 
 - `POST /register`
 - `POST /login`
 - `GET /me`
 
-## 2. `bookRoutes.js`
+### `/api/books`
 
-Handles book routes:
+Defined in `backend/routes/bookRoutes.js`:
 
 - `GET /`
 - `GET /:id`
@@ -122,294 +75,176 @@ Handles book routes:
 - `PUT /:id`
 - `DELETE /:id`
 
-All book routes first use `authMiddleware`, so logged-in user is required.
+All book routes require authentication. Mutating routes additionally require the `admin` role.
 
-Admin-only actions:
+### `/api/users`
 
-- add book
-- update book
-- delete book
-
-## 3. `userRoutes.js`
-
-Handles student and profile routes:
+Defined in `backend/routes/userRoutes.js`:
 
 - `GET /students`
 - `GET /students/:id`
 - `PUT /profile`
 - `DELETE /students/:id`
 
-## 4. `issueRoutes.js`
+Admin users can inspect and delete students. Student users can update their own profile.
 
-Handles issue and return routes:
+### `/api/issues`
+
+Defined in `backend/routes/issueRoutes.js`:
 
 - `POST /`
 - `GET /`
 - `GET /my`
 - `PUT /:id/return`
 
-## What Are Controllers?
+Admin users manage issue creation and returns. Student users can read only their own issue history through `/my`.
 
-Controllers contain the real logic.
+## Authentication Flow
 
-If route is the road, then controller is the actual work done at the destination.
+Authentication is split across three backend parts:
 
-## Controller Files
+### `authController.js`
 
-## 1. `authController.js`
-
-This file handles:
+This controller handles:
 
 - student registration
 - login
-- current logged-in user data
+- current-user response
 
-### `registerStudent()`
+Important behavior:
 
-This function:
+- registration requires all student fields
+- passwords must be at least six characters
+- email and roll number uniqueness are enforced
+- login compares the provided password with the bcrypt hash
+- successful login returns a signed JWT and a trimmed user object
 
-- reads form data from request body
-- checks required fields
-- checks password length
-- checks if email or roll number already exists
-- hashes password using bcrypt
-- inserts student into `users` table
+### `generateToken.js`
 
-### `loginUser()`
+This utility signs a JWT containing:
 
-This function:
+- user id
+- email
+- role
 
-- gets email and password
-- finds user from database
-- compares password using bcrypt
-- creates JWT token
-- sends token and user data back
-
-### `getCurrentUser()`
-
-This function returns logged-in user data from `request.user`.
-
-## 2. `bookController.js`
-
-This file handles:
-
-- get all books
-- get one book
-- add book
-- update book
-- delete book
-
-### `getBooks()`
-
-This function:
-
-- reads search query
-- reads category filter
-- builds SQL query
-- returns all matching books
-
-It also adds a custom `status` field:
-
-- `Available`
-- `Not Available`
-
-### `getBookById()`
-
-Returns a single book by id.
-
-### `addBook()`
-
-This function:
-
-- checks required fields
-- checks total copies
-- checks unique ISBN
-- inserts book into database
-- sets `available_copies = total_copies`
-
-### `updateBook()`
-
-This function is important.
-
-It:
-
-- checks book exists
-- calculates issued copies
-- prevents total copies from becoming less than issued copies
-- recalculates available copies
-- updates the record
-
-### Important for Viva
-
-This is a very good logic point. You can say:
-
-> While updating a book, I made sure total copies cannot become less than the number of already issued copies. This prevents wrong data.
-
-### `deleteBook()`
-
-This function:
-
-- checks book exists
-- checks if any active issue exists
-- deletes only if book is not currently issued
-
-## 3. `userController.js`
-
-This file handles:
-
-- get students list
-- get one student details
-- update student profile
-- delete student
-
-### `getStudents()`
-
-Returns all users whose role is `student`.
-
-### `getStudentById()`
-
-Returns:
-
-- student basic details
-- that student’s issue history
-
-### `updateProfile()`
-
-Allows student to update:
-
-- full name
-- course
-- phone number
-
-### `deleteStudent()`
-
-Deletes student only if they do not have any active issued book.
-
-## 4. `issueController.js`
-
-This file handles:
-
-- issue book
-- show all issue records
-- show current student’s issue records
-- return book
-
-### `createIssue()`
-
-This function:
-
-- gets `student_id`, `book_id`, `due_date`
-- checks data
-- checks due date
-- checks student exists
-- checks book exists
-- checks available copies
-- checks duplicate issue
-- inserts issue record
-- reduces available copies by 1
-
-### `getIssues()`
-
-Returns all issue records for admin.
-
-It joins tables to show:
-
-- student name
-- roll number
-- book title
-- dates
-- status
-
-### `getMyIssues()`
-
-Returns only current student’s issue records.
-
-### `returnIssue()`
-
-This function:
-
-- checks issue id
-- checks record exists
-- checks if already returned
-- sets status to `returned`
-- stores return date
-- increases available copies by 1
-
-### Overdue Logic
-
-There is a helper function:
-
-- `isOverdue(issueDate, status)`
-
-Actually it checks whether current date is greater than due date and whether status is still `issued`.
-
-This is used to add `overdue: true/false` in issue records.
-
-## Middleware
-
-## What Is Middleware?
-
-Middleware is code that runs before final controller logic.
-
-It is used for checking and filtering requests.
-
-## 1. `authMiddleware.js`
+### `authMiddleware.js`
 
 This middleware:
 
-- reads `Authorization` header
-- checks Bearer token
-- verifies JWT
-- finds user from database
-- stores user in `request.user`
+- reads the `Authorization` header
+- extracts the bearer token
+- verifies the token
+- loads the current user record
+- attaches the user to `request.user`
 
-If token is missing or invalid, access is denied.
+## Authorization Flow
 
-## 2. `roleMiddleware.js`
+`roleMiddleware.js` enforces role restrictions after authentication succeeds.
 
-This middleware checks user role.
+Examples:
 
-Example:
+- only admins can add, update, or delete books
+- only admins can create and return issues
+- only students can update the profile endpoint
 
-- only admin can add book
-- only student can update student profile
+## Controller Responsibilities
 
-## Utility File
+### `bookController.js`
 
-## `generateToken.js`
+Main responsibilities:
 
-This file creates JWT token using:
+- list books
+- filter by search and category
+- return a single book
+- create books
+- update books
+- delete books
 
-- user id
-- user email
-- user role
+Important rules:
 
-Token expiry is:
+- status is derived from `available_copies`
+- ISBN must be unique
+- total copies must remain at least `1`
+- total copies cannot be reduced below the number already issued
+- active issued books block deletion
 
-- `1d` meaning 1 day
+### `userController.js`
 
-## Backend Pattern Used in This Project
+Main responsibilities:
 
-This project follows a very common backend pattern:
+- list students
+- return student details with issue history
+- update the logged-in student profile
+- delete student accounts
 
-1. route receives request
-2. middleware checks user
-3. controller runs logic
-4. database query runs
-5. response is returned
+Important rules:
 
-## Important for Viva
+- only student accounts are returned by the student list
+- deleting a student is blocked if active issued books exist
 
-You should definitely remember this line:
+### `issueController.js`
 
-> The backend follows the pattern route -> middleware -> controller -> database -> response.
+Main responsibilities:
 
-## One Extra Technical Note
+- create issue records
+- list all issue records for admins
+- list current student issue history
+- return issued books
+- calculate overdue state
 
-In `issueController.js`, there is also a `getDashboardSummary()` function, but the current frontend dashboard is not using this API. Instead, the admin dashboard separately calls books, students, and issues APIs and calculates summary on the frontend side.
+Important rules:
 
-This is not a problem, but it is a useful observation if someone asks whether all functions are currently used.
+- due date cannot be earlier than the current date
+- selected student and book must exist
+- the book must have available copies
+- the same student cannot hold the same book twice as an active issue
+- issuing a book decrements `available_copies`
+- returning a book increments `available_copies`
+- overdue is true when `status === "issued"` and `due_date` is in the past
 
-## Summary
+## Database Layer
 
-The backend is responsible for all main logic of the project. It handles authentication, authorization, validation, business rules, database operations, and API responses.
+`backend/config/db.js` wraps SQLite with promise-friendly helpers:
+
+- `run(query, params)`
+- `get(query, params)`
+- `all(query, params)`
+- `exec(sql)`
+
+It also performs startup work:
+
+- chooses the database file from `DB_PATH` or defaults to `backend/database/library.db`
+- creates the database directory if needed
+- opens the SQLite connection
+- initializes tables from `schema.sql`
+- seeds the admin record from `seed.sql`
+- inserts sample students, books, and issue records if missing
+
+## Response Style
+
+Most backend responses follow a consistent JSON shape:
+
+- `success`
+- `message` when needed
+- domain-specific payload fields such as `user`, `books`, `students`, or `issues`
+
+This keeps the frontend helpers straightforward and predictable.
+
+## Health Endpoint
+
+The backend exposes:
+
+```text
+GET /api/health
+```
+
+The response is:
+
+```json
+{
+  "success": true,
+  "message": "Server is running"
+}
+```
+
+This endpoint is useful for deployment health checks and quick operational verification.

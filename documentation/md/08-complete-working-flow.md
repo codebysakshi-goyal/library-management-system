@@ -1,199 +1,169 @@
 # Complete Working Flow
 
-## Why This File Is Important
+## End-To-End Runtime Flow
 
-This file explains how the project works from start to finish.
+From startup to user interaction, the application works in a consistent sequence:
 
-This is very useful for viva because many examiners ask:
+1. `server.js` loads `backend/server.js`.
+2. The backend loads environment variables and configures Express.
+3. `initializeDatabase()` creates tables and seed data if needed.
+4. Express serves the static assets in `public/`.
+5. The browser loads HTML pages and their corresponding JavaScript files.
+6. Frontend scripts call `/api/...` endpoints for protected or dynamic data.
+7. Routes, middleware, controllers, and SQLite queries process the request.
+8. JSON responses are returned to the browser.
+9. The page updates the DOM based on the response.
 
-- how does login work?
-- how does one page connect to backend?
-- what happens when a book is issued?
-- what happens when a book is returned?
+## Authentication Flow
 
-## Full Project Flow in One Line
+### Login
 
-> Browser page takes user input, JavaScript sends API request, backend checks token and role, controller runs logic, database is updated or read, and result is sent back to frontend.
+1. The user opens `login.html`.
+2. `public/js/auth.js` intercepts the form submit.
+3. The script sends `POST /api/auth/login`.
+4. `authController.loginUser()` verifies the credentials.
+5. The backend returns a JWT token and user object.
+6. `api.js` stores them in local storage.
+7. The frontend redirects to the admin or student dashboard based on `user.role`.
 
-## Current Runtime Entry Flow
+### Current User Lookup
 
-Before user actions begin, the project starts in this order:
+1. A protected page needs user context.
+2. The page sends `GET /api/auth/me`.
+3. `authMiddleware` verifies the token.
+4. The backend returns `request.user`.
 
-1. root `server.js` is executed
-2. it loads `backend/server.js`
-3. backend loads environment variables
-4. database is initialized
-5. Express serves frontend files from `public/`
-6. browser opens the root URL `/`
+## Registration Flow
 
-## 1. Login Flow
+1. A student opens `register.html`.
+2. `auth.js` gathers form data.
+3. The script sends `POST /api/auth/register`.
+4. `authController.registerStudent()` validates fields and uniqueness.
+5. The password is hashed with bcryptjs.
+6. The student is inserted into `users`.
+7. The frontend shows a success message and redirects to login.
 
-### Step-by-Step
+## Catalog Flow
 
-1. User opens `login.html`
-2. User enters email and password
-3. `auth.js` handles form submit
-4. It sends request to `/api/auth/login`
-5. Backend `authRoutes.js` sends request to `loginUser()` in `authController.js`
-6. Controller finds user in database
-7. Password is checked using `bcrypt.compare()`
-8. If correct, JWT token is created
-9. Backend sends token and user object
-10. Frontend saves token and user in local storage
-11. Frontend redirects:
-   admin -> `admin-dashboard.html`
-   student -> `student-dashboard.html`
+### Book Listing
 
-## 2. Protected Route Flow
+1. A page such as `admin-books.html` or `student-books.html` loads.
+2. The page script sends `GET /api/books`, optionally with `search` and `category`.
+3. `bookController.getBooks()` builds the SQL query dynamically.
+4. The backend returns matching books with a computed `status` field.
+5. The frontend renders the list or table.
 
-Example: opening books list after login
+### Book Details
 
-1. Frontend sends request to `/api/books`
-2. `api.js` automatically adds `Authorization: Bearer <token>`
-3. Backend route uses `authMiddleware`
-4. Middleware verifies token
-5. Middleware loads user from database
-6. Request moves to controller
-7. Controller sends books data
+1. The user opens `book-details.html?id=<bookId>` or `edit-book.html?id=<bookId>`.
+2. The page script reads `id` from the query string.
+3. The script sends `GET /api/books/:id`.
+4. The backend returns the selected book.
+5. The frontend renders details or pre-fills the edit form.
 
-## 3. Student Registration Flow
+## Admin Book Management Flow
 
-1. Student opens `register.html`
-2. Student fills form
-3. `auth.js` collects form data
-4. Frontend sends `POST /api/auth/register`
-5. Backend checks required fields
-6. Backend checks duplicate email or roll number
-7. Password is hashed
-8. Student record is inserted into `users` table
-9. Success message is shown
-10. Student is redirected to login page
+### Add Book
 
-## 4. Add Book Flow
+1. Admin opens `add-book.html`.
+2. `add-book.js` sends `POST /api/books`.
+3. `bookController.addBook()` validates required fields, ISBN uniqueness, and total copies.
+4. The backend inserts the book with `available_copies = total_copies`.
+5. The frontend shows confirmation and redirects or refreshes the list.
 
-1. Admin opens `add-book.html`
-2. Admin enters book details
-3. Frontend sends `POST /api/books`
-4. Backend checks admin role
-5. `addBook()` validates data
-6. Database inserts new book
-7. `available_copies` is set equal to `total_copies`
-8. Success message is shown
+### Edit Book
 
-## 5. Search Book Flow
+1. Admin loads the existing book.
+2. `edit-book.js` sends `PUT /api/books/:id`.
+3. `bookController.updateBook()` recalculates available copies using the number already issued.
+4. The backend updates the record.
+5. The frontend confirms success.
 
-1. User enters search text
-2. Frontend sends query like `/api/books?search=web&category=Programming`
-3. Backend reads query parameters
-4. SQL query is built based on search and category
-5. Matching books are returned
-6. Frontend renders filtered list
+### Delete Book
 
-## 6. Issue Book Flow
+1. Admin triggers delete from the books page.
+2. `admin-books.js` sends `DELETE /api/books/:id`.
+3. `bookController.deleteBook()` checks for active issued copies.
+4. If no active issue exists, the book is deleted.
+5. The UI refreshes the listing.
 
-This is one of the most important flows in viva.
+## Student Management Flow
 
-### Step-by-Step
+### Student List
 
-1. Admin opens `issue-book.html`
-2. Page loads students and books from backend
-3. Admin selects student
-4. Admin selects available book
-5. Admin selects due date
-6. Frontend sends `POST /api/issues`
-7. Backend checks:
-   student exists or not
-   book exists or not
-   book availability
-   due date validity
-   duplicate issue
-8. Backend inserts issue record in `issue_records`
-9. Backend reduces `available_copies` by 1 in `books` table
-10. Success message is shown
+1. Admin opens `students.html`.
+2. `students.js` sends `GET /api/users/students`.
+3. The backend returns all student records ordered by creation time.
+4. The page renders the table.
 
-## 7. Return Book Flow
+### Student Details
 
-1. Admin opens issued records page
-2. Admin clicks Return button
-3. Frontend sends `PUT /api/issues/:id/return`
-4. Backend finds the issue record
-5. Backend checks it is not already returned
-6. Backend updates:
-   status = `returned`
-   return_date = today
-7. Backend increases book `available_copies` by 1
-8. Frontend reloads issue records table
+1. Admin opens `student-details.html?id=<studentId>`.
+2. `student-details.js` sends `GET /api/users/students/:id`.
+3. The backend returns the student plus issue history.
+4. The page renders both sections.
 
-## 8. Student My Issued Books Flow
+## Issue And Return Flow
 
-1. Student opens `my-issued-books.html`
-2. Frontend sends `GET /api/issues/my`
-3. Backend gets only current student’s records using `request.user.id`
-4. Backend sends issue records
-5. Frontend shows table
+### Issue Book
 
-## 9. Profile Update Flow
+1. Admin opens `issue-book.html`.
+2. `issue-book.js` loads students and books for selection.
+3. Admin submits student, book, and due date.
+4. The script sends `POST /api/issues`.
+5. `issueController.createIssue()` validates:
+   - student exists
+   - book exists
+   - available copies remain
+   - due date is not in the past
+   - duplicate active issue does not already exist
+6. The backend inserts an `issue_records` row.
+7. The backend decrements `books.available_copies`.
+8. The frontend confirms success.
 
-1. User opens `profile.html`
-2. Frontend loads current user with `GET /api/auth/me`
-3. Form fields are filled
-4. If user is student, submit is allowed
-5. Student edits allowed fields
-6. Frontend sends `PUT /api/users/profile`
-7. Backend updates database
-8. New user data is returned
-9. Frontend updates local storage
+### Return Book
 
-## 10. Overdue Calculation Flow
+1. Admin opens `issued-records.html`.
+2. `issued-records.js` displays issue rows and return buttons for active issues.
+3. Admin clicks return.
+4. The script sends `PUT /api/issues/:id/return`.
+5. `issueController.returnIssue()` verifies the record and checks that it is not already returned.
+6. The backend sets `status = returned` and stores `return_date`.
+7. The backend increments the related book’s `available_copies`.
+8. The UI reloads the records.
 
-The system marks issue records as overdue when:
+## Student Borrowing Flow
 
-- status is still `issued`
-- today’s date is after due date
+1. Student opens `my-issued-books.html`.
+2. `my-issued-books.js` sends `GET /api/issues/my`.
+3. `issueController.getMyIssues()` queries only the current student’s rows.
+4. The backend adds the `overdue` field before returning the response.
+5. The page renders the student’s issue history.
 
-This is calculated in backend inside `issueController.js`.
+## Profile Flow
 
-## How Local Storage Is Used
+1. The user opens `profile.html`.
+2. The page loads current user data.
+3. If the user is a student, the update form stays editable.
+4. `profile.js` sends `PUT /api/users/profile`.
+5. `userController.updateProfile()` updates the allowed fields.
+6. The backend returns the refreshed user object.
+7. The frontend updates local storage so the UI stays in sync.
 
-Browser local storage stores:
+## Access-Control Flow
 
-- token
-- user object
+Every protected operation uses the same pattern:
 
-This helps:
+1. The frontend attaches `Authorization: Bearer <token>`.
+2. `authMiddleware` verifies the token and loads the user.
+3. `roleMiddleware` checks whether the route is allowed for that role.
+4. The controller runs only if both checks pass.
 
-- keep user logged in
-- protect pages
-- show correct navbar links
-- send token to backend
+## Overdue Logic
 
-## Important for Viva
+The overdue flag is derived, not stored as a separate database column. A record is overdue when:
 
-You should remember these two exact lines:
+- `status` is still `issued`
+- the current date is greater than `due_date`
 
-> After login, token and user data are stored in local storage.
-
-> For protected requests, the frontend sends the token in Authorization header, and backend verifies it using JWT.
-
-## Short Explanation of MVC-Like Idea
-
-This project is not a full strict MVC framework, but it uses a similar clean separation:
-
-- routes decide URL
-- controllers handle logic
-- database stores data
-- frontend shows output
-
-## Most Important Flows to Revise for Viva
-
-- login flow
-- registration flow
-- add book flow
-- issue book flow
-- return book flow
-- profile update flow
-- role-based access flow
-
-## Summary
-
-Every major action in the project follows the same simple pattern: input -> API request -> backend validation -> database operation -> response -> frontend update.
+This calculation happens in `issueController.js` before issue data is returned to the frontend.

@@ -1,45 +1,45 @@
 # Database And API
 
-## What Is a Database?
+## Database Overview
 
-A database is an organized place to store data.
+The project uses SQLite as a relational database. The active database file is:
 
-In this project, the database stores:
+```text
+backend/database/library.db
+```
 
-- users
-- books
-- issue records
-
-This project uses **SQLite** database.
-
-## Why Database Is Needed
-
-Without database:
-
-- student data would be lost
-- book records would be lost
-- issue and return history would not exist
-
-Database makes the project permanent and structured.
+The database is initialized automatically when the server starts.
 
 ## Database Files
 
-This project uses database files in two places.
+### `backend/database/schema.sql`
 
-### `database/`
+Defines the table structure for:
 
-- `library.db` -> actual runtime database file
+- `users`
+- `books`
+- `issue_records`
 
-### `backend/database/`
+### `backend/database/seed.sql`
 
-- `schema.sql` -> creates tables
-- `seed.sql` -> inserts default admin
+Contains the admin insert statement used during startup seeding.
 
-## Table 1: `users`
+### `backend/config/db.js`
 
-This table stores login and profile data.
+Coordinates:
 
-### Important Columns
+- opening the database
+- running the schema
+- seeding the admin account
+- inserting sample students, books, and issue data
+
+## Table Design
+
+## `users`
+
+Stores authentication and profile information.
+
+Important columns:
 
 - `id`
 - `full_name`
@@ -52,18 +52,17 @@ This table stores login and profile data.
 - `created_at`
 - `updated_at`
 
-### Meaning
+Important rules:
 
-- `id` -> unique number for each user
-- `email` -> must be unique
-- `password` -> stored in hashed form
-- `role` -> either `admin` or `student`
+- `email` is unique
+- `role` must be `admin` or `student`
+- student records use `roll_number`, `course`, and `phone_number`
 
-## Table 2: `books`
+## `books`
 
-This table stores all books.
+Stores catalog information.
 
-### Important Columns
+Important columns:
 
 - `id`
 - `title`
@@ -77,17 +76,17 @@ This table stores all books.
 - `created_at`
 - `updated_at`
 
-### Meaning
+Important rules:
 
-- `isbn` -> unique book number
-- `total_copies` -> total number of copies in library
-- `available_copies` -> currently available copies
+- `isbn` is unique
+- `total_copies` must be at least `1`
+- `available_copies` cannot be negative
 
-## Table 3: `issue_records`
+## `issue_records`
 
-This table stores issue and return history.
+Stores borrowing history.
 
-### Important Columns
+Important columns:
 
 - `id`
 - `student_id`
@@ -99,295 +98,156 @@ This table stores issue and return history.
 - `created_at`
 - `updated_at`
 
-### Meaning
-
-- `student_id` -> links to `users.id`
-- `book_id` -> links to `books.id`
-- `status` -> `issued` or `returned`
-
-## Relationships Between Tables
-
-This project uses relational database design.
-
-### Relationship 1
-
-One student can have many issue records.
-
-### Relationship 2
-
-One book can appear in many issue records over time.
-
-### Foreign Keys
-
-In `issue_records`:
+Important rules:
 
 - `student_id` references `users(id)`
 - `book_id` references `books(id)`
+- `status` must be `issued` or `returned`
 
-## Simple Database Diagram
+## Relationships
 
-```text
-users
-  id (PK)
-  full_name
-  email
-  password
-  role
-  roll_number
-  course
-  phone_number
+The relational model is simple and intentional:
 
-books
-  id (PK)
-  title
-  author
-  category
-  isbn
-  total_copies
-  available_copies
+- one student can have many issue records
+- one book can appear in many issue records across time
+- each issue record joins one student and one book
 
-issue_records
-  id (PK)
-  student_id (FK -> users.id)
-  book_id (FK -> books.id)
-  issue_date
-  due_date
-  return_date
-  status
-```
+## Seed Data
 
-## Seeding Data
+On startup the app ensures the presence of:
 
-When server starts, the project creates initial data.
+- the default admin account
+- sample student accounts
+- sample books
+- sample issue records
 
-### Default Admin
+This improves the out-of-the-box experience and makes the UI immediately testable.
 
-- email: `admin@library.com`
-- password: `admin123`
+## API Overview
 
-### Sample Students
+The frontend talks to the backend through four route groups.
 
-The project also adds sample student records.
-
-### Sample Books
-
-The project adds sample books.
-
-### Sample Issue Records
-
-The project also inserts some sample issue entries.
-
-This is useful for testing and viva demo.
-
-## Important for Viva
-
-You can say:
-
-> The database is initialized automatically. Tables are created if they do not exist, and sample data is inserted for testing and demonstration. The runtime database file is `database/library.db`, while schema and seed files are kept inside `backend/database`.
-
-## API Basics
-
-API means a way for frontend and backend to communicate.
-
-Frontend sends request.
-Backend sends response.
-
-## Main API Groups
-
-This project has 4 API groups:
-
-- auth APIs
-- books APIs
-- users APIs
-- issues APIs
-
-## 1. Auth APIs
+## Auth APIs
 
 ### `POST /api/auth/register`
 
-Purpose:
+Registers a new student.
 
-- register new student
+Expected body:
+
+- `full_name`
+- `email`
+- `password`
+- `roll_number`
+- `course`
+- `phone_number`
 
 ### `POST /api/auth/login`
 
-Purpose:
+Authenticates an existing user.
 
-- login user
+Expected body:
+
+- `email`
+- `password`
+
+Success response includes:
+
+- `token`
+- `user`
 
 ### `GET /api/auth/me`
 
-Purpose:
+Returns the authenticated user. Requires a bearer token.
 
-- get current logged-in user details
-
-## 2. Books APIs
+## Book APIs
 
 ### `GET /api/books`
 
-Purpose:
+Returns the catalog for logged-in users.
 
-- get all books
+Supported query params:
 
-Supports:
-
-- search
-- category filter
+- `search`
+- `category`
 
 ### `GET /api/books/:id`
 
-Purpose:
-
-- get one book
+Returns one book record for a logged-in user.
 
 ### `POST /api/books`
 
-Purpose:
-
-- add new book
-
-Role:
-
-- admin only
+Creates a new book. Admin only.
 
 ### `PUT /api/books/:id`
 
-Purpose:
-
-- update book
-
-Role:
-
-- admin only
+Updates a book. Admin only.
 
 ### `DELETE /api/books/:id`
 
-Purpose:
+Deletes a book when no active issue exists. Admin only.
 
-- delete book
-
-Role:
-
-- admin only
-
-## 3. Users APIs
+## User APIs
 
 ### `GET /api/users/students`
 
-Purpose:
-
-- get all students
-
-Role:
-
-- admin only
+Returns all student records. Admin only.
 
 ### `GET /api/users/students/:id`
 
-Purpose:
-
-- get one student details and issue history
-
-Role:
-
-- admin only
+Returns one student and that student’s issue history. Admin only.
 
 ### `PUT /api/users/profile`
 
-Purpose:
-
-- update student profile
-
-Role:
-
-- student only
+Updates the logged-in student’s profile fields. Student only.
 
 ### `DELETE /api/users/students/:id`
 
-Purpose:
+Deletes a student when no active issue exists. Admin only.
 
-- delete student
-
-Role:
-
-- admin only
-
-## 4. Issues APIs
+## Issue APIs
 
 ### `POST /api/issues`
 
-Purpose:
-
-- issue book
-
-Role:
-
-- admin only
+Creates a new issue record and decrements the selected book’s available copies. Admin only.
 
 ### `GET /api/issues`
 
-Purpose:
-
-- get all issue records
-
-Role:
-
-- admin only
+Returns all issue records with joined student and book data. Admin only.
 
 ### `GET /api/issues/my`
 
-Purpose:
-
-- get current student issue records
-
-Role:
-
-- student only
+Returns the current student’s issue history. Student only.
 
 ### `PUT /api/issues/:id/return`
 
-Purpose:
+Marks an issue as returned and increments the corresponding book’s available copies. Admin only.
 
-- return book
+## Health API
 
-Role:
+### `GET /api/health`
 
-- admin only
+Returns:
 
-## Example API Flow
+```json
+{
+  "success": true,
+  "message": "Server is running"
+}
+```
 
-### Example: Add Book
+Use cases:
 
-1. Admin fills add-book form
-2. Frontend sends `POST /api/books`
-3. Backend validates data
-4. Backend inserts book into `books` table
-5. Backend sends success message
+- Render health checks
+- uptime verification
+- quick manual diagnostics
 
-### Example: Return Book
+## Response Conventions
 
-1. Admin clicks Return button
-2. Frontend sends `PUT /api/issues/:id/return`
-3. Backend updates issue record
-4. Backend increases available copies
-5. Frontend reloads issue records
+Most responses follow a consistent pattern:
 
-## Response Format
+- `success`: boolean
+- `message`: human-readable summary when needed
+- payload fields such as `user`, `books`, `students`, or `issues`
 
-Most backend responses are in JSON format.
-
-Common fields:
-
-- `success`
-- `message`
-- data fields like `user`, `books`, `students`, `issues`
-
-## Important for Viva
-
-If asked, “What is the difference between frontend page and API route?”, answer:
-
-> Frontend page is what user opens in browser, while API route is the backend path used by JavaScript to send or receive data.
-
-## Summary
-
-The database stores structured data in three main tables, and the API provides a clean way for frontend to perform operations like login, add book, issue book, and return book.
+That consistency keeps the frontend request helper simple and predictable.
