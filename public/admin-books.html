@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Books</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/table.css">
+  <link rel="stylesheet" href="css/books.css">
+</head>
+<body data-page="admin-books">
+  <div id="navbar"></div>
+  <main class="page-container">
+    <section class="hero-card page-hero">
+      <div class="page-hero-content">
+        <span class="page-kicker">Book Management</span>
+        <h1>Books</h1>
+        <p class="page-subtitle">View, search, add, edit, and manage the complete library book collection with a consistent college theme.</p>
+      </div>
+      <div class="page-hero-side">
+        <div class="highlight-box">
+          <strong>Books</strong>
+          <span>Track availability and copies</span>
+        </div>
+      </div>
+    </section>
+    <section class="page-header">
+      <h1>Books</h1>
+      <a class="btn btn-primary" href="add-book.html">Add Book</a>
+    </section>
+
+    <section class="card filter-card content-card">
+      <form id="bookSearchForm" class="inline-form">
+        <input type="text" name="search" placeholder="Search by title or author">
+        <input type="text" name="category" placeholder="Filter by category">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <button type="button" id="resetFilters" class="btn btn-secondary">Reset</button>
+      </form>
+    </section>
+
+    <div id="messageBox"></div>
+    <section class="card content-card">
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Author</th>
+              <th>Category</th>
+              <th>ISBN</th>
+              <th>Total</th>
+              <th>Available</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="booksTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/admin-books.js"></script>
+</body>
+</html>

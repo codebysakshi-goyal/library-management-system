@@ -12,12 +12,22 @@ const userRoutes = require("./routes/userRoutes");
 const issueRoutes = require("./routes/issueRoutes");
 
 const app = express();
-const frontendPath = path.join(__dirname, "..", "frontend");
+const publicPath = path.join(__dirname, "..", "public");
+const staticPath = path.resolve(publicPath);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(frontendPath));
+
+app.get("/", (req, res) => {
+  res.send("Library Management System is running");
+});
+
+app.get("/app", (req, res) => {
+  res.sendFile(path.join(staticPath, "index.html"));
+});
+
+app.use(express.static(staticPath));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
@@ -38,14 +48,15 @@ app.use((request, response) => {
   });
 });
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 initializeDatabase()
   .then(() => {
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
     console.error("Database initialization failed", error);
+    process.exit(1);
   });

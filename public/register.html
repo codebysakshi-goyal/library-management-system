@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Register</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/form.css">
+</head>
+<body data-page="register">
+  <div id="navbar"></div>
+  <main class="page-container narrow-container">
+    <section class="card content-card">
+      <div class="auth-header">
+        <span class="page-kicker">New Student</span>
+        <h1>Student Registration</h1>
+        <p>Create your account to browse books and track issued records.</p>
+      </div>
+      <form id="registerForm" class="form-grid">
+        <label>Full Name
+          <input type="text" name="full_name" required>
+        </label>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+        <label>Password
+          <input type="password" name="password" minlength="6" required>
+        </label>
+        <label>Roll Number
+          <input type="text" name="roll_number" required>
+        </label>
+        <label>Course
+          <input type="text" name="course" required>
+        </label>
+        <label>Phone Number
+          <input type="text" name="phone_number" required>
+        </label>
+        <button type="submit" class="btn btn-primary">Register</button>
+      </form>
+      <div id="messageBox"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

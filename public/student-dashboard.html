@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body data-page="student-dashboard">
+  <div id="navbar"></div>
+  <main class="page-container">
+    <section class="hero-card page-hero">
+      <div class="page-hero-content">
+        <span class="page-kicker">Student Panel</span>
+        <h1 id="studentWelcome">Student Dashboard</h1>
+        <p class="page-subtitle">Check your current issued books, due dates, and overdue status from one simple dashboard.</p>
+      </div>
+      <div class="page-hero-side">
+        <div class="highlight-box">
+          <strong>My Library</strong>
+          <span>Books, due dates, and profile</span>
+        </div>
+      </div>
+    </section>
+    <section id="studentSummary" class="grid-4"></section>
+    <section class="card content-card">
+      <h2>My Current Issued Books</h2>
+      <div id="studentCurrentIssues"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/student-dashboard.js"></script>
+</body>
+</html>
