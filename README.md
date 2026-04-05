@@ -2,6 +2,11 @@
 
 This is a simple full stack Library Management System made for a BCA third-year level project.
 
+## Live Demo
+
+- Deployment Platform: Render
+- Live URL: `https://your-render-app-url.onrender.com`
+
 ## Tech Stack
 
 - Frontend: HTML, CSS, JavaScript
@@ -48,19 +53,13 @@ Sample student emails:
 ## Setup Steps
 
 1. Open terminal in the project root.
-2. Go to the backend folder:
-
-```bash
-cd backend
-```
-
-3. Install dependencies:
+2. Install dependencies:
 
 ```bash
 npm install
 ```
 
-4. Start the server:
+3. Start the server:
 
 ```bash
 PORT=5051 npm run dev
@@ -72,11 +71,19 @@ Or:
 PORT=5051 npm start
 ```
 
-5. Open this URL in browser:
+4. Open this URL in browser:
 
 ```text
-http://localhost:5051
+http://localhost:5051/app
 ```
+
+## Deployment
+
+- Platform used: Render
+- Build command: `npm install`
+- Start command: `npm start`
+- Live URL placeholder: `https://your-render-app-url.onrender.com`
+- Required environment variable: `JWT_SECRET=your-secret-value`
 
 ## Database
 

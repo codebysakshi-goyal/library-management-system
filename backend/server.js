@@ -20,10 +20,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("Library Management System is running");
-});
-
-app.get("/app", (req, res) => {
   res.sendFile(path.join(staticPath, "index.html"));
 });
 
