@@ -161,7 +161,7 @@ library-managment-system/
 ├── report/
 │   ├── report.md
 │   ├── code-explanation.md
-│   └── screensorts/
+│   └── screenshots/
 ├── codex-plan/
 ├── package.json
 ├── package-lock.json

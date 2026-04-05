@@ -7,6 +7,36 @@ Campus Library Management System is a full-stack web application for managing bo
 - App URL: `https://library-management-system-n79m.onrender.com`
 - Health check: `https://library-management-system-n79m.onrender.com/api/health`
 
+## Application Screenshot
+
+<p align="center">
+  <img src="report/screenshots/01-home-page.png" alt="Campus Library Management System Home Page" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/02-login-page.png" alt="Campus Library Management System Login Page" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/06-admin-dashboard.png" alt="Campus Library Management System Admin Dashboard" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/07-book-management.png" alt="Campus Library Management System Book Management" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/12-students-management-page.png" alt="Campus Library Management System Students Management" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/14-student-dashboard.png" alt="Campus Library Management System Student Dashboard" width="800">
+</p>
+
+<p align="center">
+  <img src="report/screenshots/18-profile-page.png" alt="Campus Library Management System Profile Page" width="800">
+</p>
+
 ## Core Features
 
 - Admin and student authentication with JWT
@@ -34,11 +64,26 @@ Campus Library Management System is a full-stack web application for managing bo
 library-managment-system/
 ├── backend/
 │   ├── config/
+│   │   └── db.js
 │   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── bookController.js
+│   │   ├── issueController.js
+│   │   └── userController.js
 │   ├── database/
+│   │   ├── library.db
+│   │   ├── schema.sql
+│   │   └── seed.sql
 │   ├── middleware/
+│   │   ├── authMiddleware.js
+│   │   └── roleMiddleware.js
 │   ├── routes/
+│   │   ├── authRoutes.js
+│   │   ├── bookRoutes.js
+│   │   ├── issueRoutes.js
+│   │   └── userRoutes.js
 │   ├── utils/
+│   │   └── generateToken.js
 │   └── server.js
 ├── documentation/
 │   ├── md/
@@ -49,12 +94,11 @@ library-managment-system/
 │   ├── js/
 │   └── *.html
 ├── report/
-│   ├── report.md
 │   ├── code-explanation.md
-│   └── screensorts/
-├── codex-plan/
-├── package.json
+│   ├── report.md
+│   └── screenshots/
 ├── package-lock.json
+├── package.json
 └── server.js
 ```
 

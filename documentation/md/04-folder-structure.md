@@ -40,7 +40,7 @@ library-managment-system/
 ├── report/
 │   ├── code-explanation.md
 │   ├── report.md
-│   └── screensorts/
+│   └── screenshots/
 ├── codex-plan/
 ├── package-lock.json
 ├── package.json
@@ -186,7 +186,7 @@ This folder holds submission-oriented project material.
 
 - `report.md` is the main project report
 - `code-explanation.md` documents code structure and implementation details
-- `screensorts/` stores screenshots referenced by the report
+- `screenshots/` stores screenshots referenced by the report
 
 ## `codex-plan/`
 
