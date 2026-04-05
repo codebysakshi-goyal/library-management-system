@@ -1,5 +1,23 @@
 # Frontend Explanation
 
+## What “frontend” means (in very simple words)
+
+Frontend is the part you can **see** and **click** in the browser.
+
+In this project, the frontend is made of:
+
+- **HTML** pages (structure)
+- **CSS** files (design)
+- **JavaScript** files (buttons, forms, calling APIs, showing data)
+
+All frontend files are inside the `public/` folder.
+
+## Tiny glossary (simple meanings)
+
+- **DOM**: the page structure that JavaScript can change (like filling a table with rows)
+- **Event**: something the user does (click, submit, page load)
+- **localStorage**: a small browser storage used here to save `token` and `user`
+
 ## Frontend Role
 
 The frontend is a static multi-page interface served from `public/`. Each page is written in HTML, styled with CSS, and enhanced with vanilla JavaScript. Instead of a frontend framework, the project uses small page-specific scripts plus a few shared utility files.
@@ -28,6 +46,12 @@ This file centralizes client-side authentication state and API communication. It
 - adding the `Authorization` header when a token exists
 
 Because of this file, page scripts do not need to repeat fetch boilerplate.
+
+Simple mental model:
+
+```text
+apiRequest("/books")  ==  fetch("/api/books") + add token header + parse JSON
+```
 
 ### `public/js/common.js`
 
@@ -188,6 +212,20 @@ Most pages follow the same structure:
 4. The script fetches data from the backend.
 5. The DOM is updated with the results.
 
+### Example: how the Admin Dashboard page works
+
+```text
+public/admin-dashboard.html
+  loads -> public/js/api.js + public/js/common.js + public/js/admin-dashboard.js
+
+public/js/admin-dashboard.js
+  -> requireAuth("admin")
+  -> apiRequest("/books")
+  -> apiRequest("/users/students")
+  -> apiRequest("/issues")
+  -> renders summary cards + lists
+```
+
 ## Browser Storage
 
 The app uses local storage for:
@@ -210,3 +248,9 @@ The frontend expects JSON responses with predictable shapes and uses the shared 
 - badges for status, availability, and overdue state
 
 Because the frontend is modular but simple, it is easy to trace a page from HTML to its JS file to the API endpoint it calls.
+
+---
+
+## What to read next
+
+Next file: **Database and API** → [`07-database-and-api.md`](07-database-and-api.md)

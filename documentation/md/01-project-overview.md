@@ -1,5 +1,34 @@
 # Project Overview
 
+## Who this is for
+
+This document is written for a **BCA student** who has **zero programming knowledge** and wants to understand this project confidently for a viva.
+
+If you ever feel “this looks too technical”, don’t worry. Read slowly and keep going — the same words repeat again and again in this codebase.
+
+## The story in one minute
+
+Imagine a real college library:
+
+- Students ask: “Is this book available?”
+- The librarian/admin asks: “Who has this book? When is it due? Is it overdue?”
+- If everything is written in registers, it becomes slow and error‑prone.
+
+So we built a small website where:
+
+- **Admin** manages books, students, and issue/return records.
+- **Student** registers, logs in, browses books, and sees their own issued books.
+
+This project is called **Campus Library Management System**.
+
+## Tiny glossary (very important words)
+
+- **Frontend**: what you see in the browser (`public/` folder)
+- **Backend**: server code that provides data and rules (`backend/` folder)
+- **Database**: where data is stored permanently (SQLite `.db` file)
+- **API**: URLs starting with `/api/...` used by the frontend to get/save data
+- **JWT token**: a “digital ID card” given after login; the browser sends it in requests
+
 ## Purpose
 
 Campus Library Management System is a web application for handling routine college-library operations in a structured digital workflow. The application replaces manual register-based processes with authenticated pages and API-backed records for books, students, issue activity, and returns.
@@ -55,12 +84,26 @@ The application uses a straightforward multi-page full-stack architecture:
 4. The backend routes map requests to controllers.
 5. Controllers validate data, apply business rules, run SQLite queries, and return JSON.
 
+### A simple block diagram (how it works)
+
+```text
+Browser (HTML/CSS/JS in public/)
+   |
+   | fetch() calls like /api/books
+   v
+Express Server (backend/server.js)
+   |
+   | SQL queries
+   v
+SQLite Database (DB_PATH / a .db file)
+```
+
 ## Current Runtime Paths
 
 - Entrypoint: `server.js`
 - Main Express app: `backend/server.js`
 - Active frontend: `public/`
-- Default database file: `backend/database/library.db`
+- Runtime database file: controlled by `DB_PATH` (from `.env`). If `DB_PATH` is not set, the code falls back to `backend/database/library.db` (see `backend/config/db.js`).
 - Schema file: `backend/database/schema.sql`
 - Seed file: `backend/database/seed.sql`
 
@@ -89,3 +132,9 @@ By design, the system provides:
 ## Short Technical Summary
 
 This is a Node.js and Express application with a static multi-page frontend and a SQLite database. Authentication uses JWT, passwords are hashed with bcryptjs, and the backend enforces role-based access for admin and student users.
+
+---
+
+## What to read next
+
+Next file: **Features and user flow** → [`02-features-and-user-flow.md`](02-features-and-user-flow.md)

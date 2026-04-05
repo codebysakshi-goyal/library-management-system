@@ -1,5 +1,20 @@
 # Features And User Flow
 
+## Why this file exists
+
+Now that you know **what the project is**, this file answers:
+
+- “What exactly can Admin do?”
+- “What exactly can Student do?”
+- “What is the typical flow from start to finish?”
+
+## Tiny glossary (simple meanings)
+
+- **Role**: the type of user (Admin or Student). The role decides permissions.
+- **Feature**: a functionality the system provides (example: “Issue a book”).
+- **Flow**: step-by-step story of how a user uses the app.
+- **CRUD**: Create / Read / Update / Delete (basic operations on data).
+
 ## Functional Scope
 
 The project supports the day-to-day workflows required in a small academic library:
@@ -144,6 +159,12 @@ The controllers enforce a set of domain rules that protect data consistency.
 1. A user opens `/`, which serves `public/index.html`.
 2. The public landing page links to login and registration pages.
 
+```text
+index.html
+  |-> login.html
+  `-> register.html
+```
+
 ### Student Flow
 
 1. Student registers or logs in.
@@ -152,12 +173,30 @@ The controllers enforce a set of domain rules that protect data consistency.
 4. The student is redirected to `student-dashboard.html`.
 5. From there the student can navigate to books, issue history, and profile pages.
 
+```text
+register/login
+   -> student-dashboard.html
+      -> student-books.html -> book-details.html
+      -> my-issued-books.html
+      -> profile.html
+```
+
 ### Admin Flow
 
 1. Admin logs in.
 2. The same auth flow stores token and user details in local storage.
 3. The admin is redirected to `admin-dashboard.html`.
 4. From there the admin can move to books, students, issue-book, issued-records, and profile pages.
+
+```text
+login
+  -> admin-dashboard.html
+     -> admin-books.html -> add-book.html / edit-book.html
+     -> students.html -> student-details.html
+     -> issue-book.html
+     -> issued-records.html
+     -> profile.html
+```
 
 ## Access Control Flow
 
@@ -168,3 +207,9 @@ The frontend and backend both participate in access control:
 - backend restricts privileged actions with `roleMiddleware("admin")` or `roleMiddleware("student")`
 
 If a user reaches a page without the required role, the UI redirects them to `unauthorized.html`.
+
+---
+
+## What to read next
+
+Next file: **Technologies used** → [`03-technologies-used.md`](03-technologies-used.md)

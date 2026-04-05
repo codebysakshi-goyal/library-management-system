@@ -1,5 +1,18 @@
 # Backend Explanation
 
+## What “backend” means (in very simple words)
+
+The backend is the part of the project that runs on the server (your laptop or a cloud server).
+
+Its main jobs are:
+
+1. Serve the frontend files (`public/`) to the browser
+2. Provide APIs like `/api/books` so the frontend can read/save data
+3. Enforce rules like “only admin can add books”
+4. Talk to the SQLite database
+
+If the frontend is the “face” of the application, the backend is the “brain”.
+
 ## Backend Responsibilities
 
 The backend is responsible for:
@@ -36,6 +49,20 @@ Its only job is to make the repository root the application entrypoint.
 - serves `public/`
 - exposes the health endpoint at `GET /api/health`
 - starts listening only after the database initializes
+
+### Request flow diagram (route → middleware → controller)
+
+When the frontend calls an API, the backend typically follows this path:
+
+```text
+Frontend (fetch /api/...)
+  -> Route file (backend/routes/*.js)
+     -> Middleware (backend/middleware/*.js)
+        -> Controller (backend/controllers/*.js)
+           -> DB helpers (backend/config/db.js)
+              -> SQLite file
+  <- JSON response back to frontend
+```
 
 ## Middleware Layer
 
@@ -202,6 +229,10 @@ Important rules:
 - returning a book increments `available_copies`
 - overdue is true when `status === "issued"` and `due_date` is in the past
 
+Note from the codebase:
+
+- `backend/controllers/issueController.js` also contains `getDashboardSummary`, but it is **not currently connected to any route** in `backend/routes/issueRoutes.js`. The admin dashboard builds its summary by calling `/api/books`, `/api/users/students`, and `/api/issues` and calculating totals in the browser (`public/js/admin-dashboard.js`).
+
 ## Database Layer
 
 `backend/config/db.js` wraps SQLite with promise-friendly helpers:
@@ -213,12 +244,16 @@ Important rules:
 
 It also performs startup work:
 
-- chooses the database file from `DB_PATH` or defaults to `backend/database/library.db`
+- chooses the database file from `DB_PATH` or defaults to `backend/database/library.db` (so your `.env` matters)
 - creates the database directory if needed
 - opens the SQLite connection
 - initializes tables from `schema.sql`
 - seeds the admin record from `seed.sql`
 - inserts sample students, books, and issue records if missing
+
+Beginner note:
+
+- In this repository, `.env` sets `DB_PATH=./database/library.db`, so the app will create/use a root `database/` folder when you run locally.
 
 ## Response Style
 
@@ -248,3 +283,9 @@ The response is:
 ```
 
 This endpoint is useful for deployment health checks and quick operational verification.
+
+---
+
+## What to read next
+
+Next file: **Frontend explanation** → [`06-frontend-explanation.md`](06-frontend-explanation.md)

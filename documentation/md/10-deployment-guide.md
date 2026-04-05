@@ -2,9 +2,9 @@
 
 ## Deployment Target
 
-The project is deployed on Render as a Node.js web service.
+The project can be deployed on Render as a Node.js web service.
 
-Current public URLs:
+In this repository’s root `README.md`, these URLs are listed:
 
 - App: `https://library-management-system-n79m.onrender.com`
 - Health check: `https://library-management-system-n79m.onrender.com/api/health`
@@ -24,6 +24,11 @@ The repository is prepared for root-level deployment:
 ### `JWT_SECRET`
 
 This value is required for JWT signing and verification.
+
+Simple meaning:
+
+- It is the “secret key” used to create/verify login tokens.
+- If it is missing, login/token checks will fail.
 
 Example:
 
@@ -46,6 +51,11 @@ backend/database/library.db
 ```
 
 If you want a custom database path, set `DB_PATH` explicitly.
+
+Beginner note:
+
+- SQLite stores data in one file.
+- `DB_PATH` is the path of that file on the server.
 
 ## Render Configuration
 
@@ -103,8 +113,18 @@ If the service does not use `npm start`, Render may not launch the correct root 
 
 ### Incorrect Database Assumptions
 
-The current default database path is `backend/database/library.db`, not a root-level `database/` folder.
+The backend uses `DB_PATH` if it is set; otherwise it falls back to `backend/database/library.db` (see `backend/config/db.js`).
+
+So if your `.env` sets something like `DB_PATH=./database/library.db`, then the runtime database file will be created/used in a root-level `database/` folder.
 
 ### Health Check Misconfiguration
 
 Use `/api/health`, not `/health`.
+
+---
+
+## If you are learning (recommended next step)
+
+Go back to the documentation index and re-read in order:
+
+- [`README.md`](README.md)

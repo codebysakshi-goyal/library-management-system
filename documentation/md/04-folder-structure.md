@@ -1,50 +1,62 @@
 # Folder Structure
 
+## How to use this file (beginner-friendly)
+
+When you open a project folder for the first time, it feels like “too many files”.
+
+So think like this:
+
+- You are looking for **start points** (entry files)
+- You are looking for **main areas** (frontend, backend, database)
+- You are looking for **connections** (which file calls which file)
+
+This file is your “map”.
+
 ## Repository Layout
 
 The current repository has been simplified so the running application is represented directly by the folder structure.
 
 ```text
 library-managment-system/
-├── backend/
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── bookController.js
-│   │   ├── issueController.js
-│   │   └── userController.js
-│   ├── database/
-│   │   ├── library.db
-│   │   ├── schema.sql
-│   │   └── seed.sql
-│   ├── middleware/
-│   │   ├── authMiddleware.js
-│   │   └── roleMiddleware.js
-│   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── bookRoutes.js
-│   │   ├── issueRoutes.js
-│   │   └── userRoutes.js
-│   ├── utils/
-│   │   └── generateToken.js
-│   └── server.js
-├── documentation/
-│   ├── md/
-│   └── pdf/
-├── public/
-│   ├── assets/
-│   ├── css/
-│   ├── js/
-│   └── *.html
-├── report/
-│   ├── code-explanation.md
-│   ├── report.md
-│   └── screenshots/
-├── codex-plan/
-├── package-lock.json
-├── package.json
-└── server.js
+|-- backend/
+|   |-- config/
+|   |   `-- db.js
+|   |-- controllers/
+|   |   |-- authController.js
+|   |   |-- bookController.js
+|   |   |-- issueController.js
+|   |   `-- userController.js
+|   |-- database/
+|   |   |-- library.db
+|   |   |-- schema.sql
+|   |   `-- seed.sql
+|   |-- middleware/
+|   |   |-- authMiddleware.js
+|   |   `-- roleMiddleware.js
+|   |-- routes/
+|   |   |-- authRoutes.js
+|   |   |-- bookRoutes.js
+|   |   |-- issueRoutes.js
+|   |   `-- userRoutes.js
+|   |-- utils/
+|   |   `-- generateToken.js
+|   `-- server.js
+|-- documentation/
+|   |-- md/
+|   `-- pdf/
+|-- public/
+|   |-- assets/
+|   |-- css/
+|   |-- js/
+|   `-- *.html
+|-- report/
+|   |-- code-explanation.md
+|   |-- report.md
+|   `-- screenshots/
+|-- node_modules/
+|-- package-lock.json
+|-- package.json
+`-- server.js
 ```
 
 ## Root Files
@@ -55,6 +67,9 @@ The root server file is a very small entrypoint:
 
 - it exists so the project can be started from the repository root
 - it simply loads `backend/server.js`
+
+If someone asks in viva: **“Where does your project start?”**  
+Answer: **`server.js` starts the backend by loading `backend/server.js`.**
 
 ### `package.json`
 
@@ -68,6 +83,18 @@ The root package manifest is the active project package file. It defines:
 ### `package-lock.json`
 
 This file locks dependency versions for consistent installs.
+
+### `.env` and `.env.example`
+
+These files store environment variables (configuration), like:
+
+- `PORT` (server port)
+- `JWT_SECRET` (secret for login tokens)
+- `DB_PATH` (where the SQLite `.db` file is stored/created)
+
+If you run the project and `DB_PATH` points to `./database/library.db`, you may see a new folder appear:
+
+- `database/` (created automatically to store the SQLite file)
 
 ## `backend/`
 
@@ -126,7 +153,7 @@ Utility code lives here.
 
 This folder contains the data layer files used by the app.
 
-- `library.db`: default runtime database file
+- `library.db`: a database file present in the repo (the actual runtime DB location is controlled by `DB_PATH` in `.env`)
 - `schema.sql`: table definitions
 - `seed.sql`: initial admin seed statement
 
@@ -188,9 +215,10 @@ This folder holds submission-oriented project material.
 - `code-explanation.md` documents code structure and implementation details
 - `screenshots/` stores screenshots referenced by the report
 
-## `codex-plan/`
+## `node_modules/`
 
-This folder is intentionally not part of the project’s functional architecture. It is used only to provide development context for AI-assisted work and should be ignored in public-facing explanations of the codebase.
+This folder is created by `npm install`. It contains downloaded libraries (dependencies).  
+For learning and viva, you normally **do not read or edit** anything inside `node_modules/`.
 
 ## Folder-Structure Rationale
 
@@ -203,3 +231,9 @@ The structure is intentionally simple:
 - report files support submission material
 
 Because duplicate source trees were removed, the repository now maps much more directly to the actual runtime behavior of the application.
+
+---
+
+## What to read next
+
+Next file: **Backend explanation** → [`05-backend-explanation.md`](05-backend-explanation.md)

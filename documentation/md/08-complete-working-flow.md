@@ -1,5 +1,15 @@
 # Complete Working Flow
 
+## Why this file is important for viva
+
+In viva, teachers often ask: **“Explain the complete flow from start to end.”**
+
+So think of this file as your “script”:
+
+- how the server starts
+- how login works
+- how data moves from UI → backend → database → back to UI
+
 ## End-To-End Runtime Flow
 
 From startup to user interaction, the application works in a consistent sequence:
@@ -13,6 +23,12 @@ From startup to user interaction, the application works in a consistent sequence
 7. Routes, middleware, controllers, and SQLite queries process the request.
 8. JSON responses are returned to the browser.
 9. The page updates the DOM based on the response.
+
+### One-line flow diagram
+
+```text
+HTML page -> JS fetch (/api) -> Express route -> middleware -> controller -> SQLite -> JSON -> UI update
+```
 
 ## Authentication Flow
 
@@ -167,3 +183,9 @@ The overdue flag is derived, not stored as a separate database column. A record 
 - the current date is greater than `due_date`
 
 This calculation happens in `issueController.js` before issue data is returned to the frontend.
+
+---
+
+## What to read next
+
+Next file: **Viva preparation** → [`09-viva-preparation.md`](09-viva-preparation.md)
