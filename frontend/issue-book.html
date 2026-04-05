@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Issue Book</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/form.css">
+  <link rel="stylesheet" href="css/issue.css">
+</head>
+<body data-page="issue-book">
+  <div id="navbar"></div>
+  <main class="page-container narrow-container">
+    <section class="hero-card page-hero">
+      <div class="page-hero-content">
+        <span class="page-kicker">Issue Management</span>
+        <h1>Issue Book</h1>
+        <p class="page-subtitle">Select a student, choose an available book, and set the due date for issue.</p>
+      </div>
+    </section>
+    <section class="card content-card">
+      <p class="issue-note">Only books with available copies can be issued. Duplicate active issues are blocked automatically.</p>
+      <form id="issueForm" class="form-grid">
+        <label>Student
+          <select name="student_id" id="studentSelect" required></select>
+        </label>
+        <label>Book
+          <select name="book_id" id="bookSelect" required></select>
+        </label>
+        <label>Due Date
+          <input type="date" name="due_date" id="dueDateInput" required>
+        </label>
+        <button type="submit" class="btn btn-primary">Issue Book</button>
+      </form>
+      <div id="messageBox"></div>
+    </section>
+  </main>
+  <div id="footer"></div>
+  <script src="js/api.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/issue-book.js"></script>
+</body>
+</html>
