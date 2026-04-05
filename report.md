@@ -746,113 +746,119 @@ The project includes one default admin account and a set of sample student accou
 
 # SCREENSHOTS
 
-## Figure 1: Home Page
+## Generic Screensorts
 
-**Placeholder for Screenshot**
+## Screensort: 1 - Home Page
+
+![Figure 1: Home Page](screensorts/01-home-page.png)
 
 This page serves as the entry point of the system. It introduces the project and provides navigation options for login and registration.
 
-## Figure 2: Login Page
+## Screensort: 2 - Login Page
 
-**Placeholder for Screenshot**
+![Figure 2: Login Page](screensorts/02-login-page.png)
 
 This page allows registered users to log in using their email and password. Based on the user role, the system redirects the user to the appropriate dashboard.
 
-## Figure 3: Registration Page
+## Screensort: 3 - Registration Page
 
-**Placeholder for Screenshot**
+![Figure 3: Registration Page](screensorts/03-registration-page.png)
 
 This page is used by students to create a new account. It collects academic and personal details needed for library registration.
 
-## Figure 4: Admin Dashboard
+## Screensort: 4 - Unauthorized Page
 
-**Placeholder for Screenshot**
-
-This page displays key summary information such as total books, total students, issued books, and available books. It gives the administrator a quick overview of library activity.
-
-## Figure 5: Book Management
-
-**Placeholder for Screenshot**
-
-This page allows the administrator to add, view, search, edit, and delete book records. It is the main section for maintaining the library inventory.
-
-## Figure 6: Issue Book
-
-**Placeholder for Screenshot**
-
-This page is used by the administrator to issue a selected book to a student by entering the required issue details and due date.
-
-## Figure 7: Student Dashboard
-
-**Placeholder for Screenshot**
-
-This page provides students with quick access to their library-related information. It acts as the central page for viewing books, issued records, and profile details.
-
-## Figure 8: Student Books Page
-
-**Placeholder for Screenshot**
-
-This page displays the list of books available to student users. It helps students search and review library books easily.
-
-## Figure 9: My Issued Books Page
-
-**Placeholder for Screenshot**
-
-This page shows the books issued to the currently logged-in student along with issue date, due date, and return status.
-
-## Figure 10: Students Management Page
-
-**Placeholder for Screenshot**
-
-This page is used by the administrator to view the list of registered students and manage student-related records.
-
-## Figure 11: Student Details Page
-
-**Placeholder for Screenshot**
-
-This page presents complete information of a selected student along with the related issue history.
-
-## Figure 12: Add Book Page
-
-**Placeholder for Screenshot**
-
-This page contains the form used by the administrator to add a new book into the system.
-
-## Figure 13: Edit Book Page
-
-**Placeholder for Screenshot**
-
-This page allows the administrator to modify the details of an existing book in the database.
-
-## Figure 14: Issued Records Page
-
-**Placeholder for Screenshot**
-
-This page displays all issue and return records maintained by the system for administrative tracking.
-
-## Figure 15: Profile Page
-
-**Placeholder for Screenshot**
-
-This page allows users to view and update their personal details maintained in the system.
-
-## Figure 16: Book Details Page
-
-**Placeholder for Screenshot**
-
-This page provides complete information about a selected book, including category, author, availability, and description.
-
-## Figure 17: Unauthorized Page
-
-**Placeholder for Screenshot**
+![Figure 4: Unauthorized Page](screensorts/04-unauthorized-page.png)
 
 This page is displayed when a user tries to access a section without the required permission.
 
-## Figure 18: Not Found Page
+## Admin Screensorts
 
-**Placeholder for Screenshot**
+## Screensort: 5 - Book Not Found Page
 
-This page is shown when an invalid or unavailable page is requested within the application.
+![Figure 5: Book Not Found Page](screensorts/05-not-found-page.png)
+
+This page is shown in the admin section when a searched or requested book record is not found in the system.
+
+## Screensort: 6 - Admin Dashboard
+
+![Figure 6: Admin Dashboard](screensorts/06-admin-dashboard.png)
+
+This page displays key summary information such as total books, total students, issued books, and available books. It gives the administrator a quick overview of library activity.
+
+## Screensort: 7 - Book Management
+
+![Figure 7: Book Management](screensorts/07-book-management.png)
+
+This page allows the administrator to add, view, search, edit, and delete book records. It is the main section for maintaining the library inventory.
+
+## Screensort: 8 - Add Book Page
+
+![Figure 8: Add Book Page](screensorts/08-add-book-page.png)
+
+This page contains the form used by the administrator to add a new book into the system.
+
+## Screensort: 9 - Edit Book Page
+
+![Figure 9: Edit Book Page](screensorts/09-edit-book-page.png)
+
+This page allows the administrator to modify the details of an existing book in the database.
+
+## Screensort: 10 - Issue Book
+
+![Figure 10: Issue Book](screensorts/10-issue-book.png)
+
+This page is used by the administrator to issue a selected book to a student by entering the required issue details and due date.
+
+## Screensort: 11 - Issued Records Page
+
+![Figure 11: Issued Records Page](screensorts/11-issued-records-page.png)
+
+This page displays all issue and return records maintained by the system for administrative tracking.
+
+## Screensort: 12 - Students Management Page
+
+![Figure 12: Students Management Page](screensorts/12-students-management-page.png)
+
+This page is used by the administrator to view the list of registered students and manage student-related records.
+
+## Screensort: 13 - Student Details Page
+
+![Figure 13: Student Details Page](screensorts/13-student-details-page.png)
+
+This page presents complete information of a selected student along with the related issue history.
+
+## Student Screensorts
+
+## Screensort: 14 - Student Dashboard
+
+![Figure 14: Student Dashboard](screensorts/14-student-dashboard.png)
+
+This page provides students with quick access to their library-related information. It acts as the central page for viewing books, issued records, and profile details.
+
+## Screensort: 15 - Student Books Page
+
+![Figure 15: Student Books Page](screensorts/15-student-books-page.png)
+
+This page displays the list of books available to student users. It helps students search and review library books easily.
+
+## Screensort: 16 - My Issued Books Page
+
+![Figure 16: My Issued Books Page](screensorts/16-my-issued-books-page.png)
+
+This page shows the books issued to the currently logged-in student along with issue date, due date, and return status.
+
+## Screensort: 17 - Book Details Page
+
+![Figure 17: Book Details Page](screensorts/17-book-details-page.png)
+
+This page provides complete information about a selected book, including category, author, availability, and description.
+
+## Screensort: 18 - Profile Page
+
+![Figure 18: Profile Page](screensorts/18-profile-page.png)
+
+This page allows users to view and update their personal details maintained in the system.
 
 ---
 

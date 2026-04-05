@@ -63,19 +63,19 @@ npm install
 4. Start the server:
 
 ```bash
-npm run dev
+PORT=5051 npm run dev
 ```
 
 Or:
 
 ```bash
-npm start
+PORT=5051 npm start
 ```
 
 5. Open this URL in browser:
 
 ```text
-http://localhost:5000
+http://localhost:5051
 ```
 
 ## Database
@@ -135,4 +135,3 @@ When the server starts for the first time:
 - Node.js and Express.js are used to create backend routes and logic.
 - SQLite is used to store users, books, and issue records.
 - JWT is used for login authentication and protected routes.
-
