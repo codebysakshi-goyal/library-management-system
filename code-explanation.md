@@ -8,13 +8,15 @@ code { background: #ffffff !important; }
 ## System Architecture Diagram
 
 ```text
-User / Browser
+Root server.js
     |
     v
-Frontend (HTML, CSS, JavaScript)
+backend/server.js (Express App)
     |
-    v
-Backend (Node.js + Express)
+    +-- Serves public/ frontend files
+    +-- Registers /api routes
+    +-- Loads environment variables
+    +-- Initializes database
     |
     +-- Routes
     |     +-- authRoutes
@@ -32,25 +34,32 @@ Backend (Node.js + Express)
     |     +-- authMiddleware
     |     `-- roleMiddleware
     |
-    +-- Utils
-    |     `-- generateToken
-    |
     `-- Database Layer
-          +-- db.js
-          +-- schema.sql
-          `-- seed.sql
-                |
-                v
-          SQLite Database
+          +-- backend/database/schema.sql
+          +-- backend/database/seed.sql
+          `-- database/library.db
 ```
 
 ## Project Files
+
+### server.js
+
+**Path:** `server.js`
+
+**Purpose:** Root project entrypoint used by local run and Render deployment.
+
+**Code:**
+
+```javascript
+require("./backend/server");
+
+```
 
 ### backend/config/db.js
 
 **Path:** `backend/config/db.js`
 
-**Purpose:** Database configuration file that creates the SQLite connection, helper query methods, schema initialization, and seed data setup.
+**Purpose:** Database configuration file that creates the SQLite connection, supports environment-based database paths, and runs schema initialization plus seed data setup.
 
 **Code:**
 
@@ -60,10 +69,16 @@ const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
 const bcrypt = require("bcryptjs");
 
-const databaseDirectory = path.join(__dirname, "..", "database");
-const databasePath = path.join(databaseDirectory, "library.db");
-const schemaPath = path.join(databaseDirectory, "schema.sql");
-const seedPath = path.join(databaseDirectory, "seed.sql");
+const appDatabaseDirectory = path.join(__dirname, "..", "database");
+const configuredDatabasePath = process.env.DB_PATH
+  ? path.resolve(process.env.DB_PATH)
+  : path.join(appDatabaseDirectory, "library.db");
+const databaseDirectory = path.dirname(configuredDatabasePath);
+const databasePath = configuredDatabasePath;
+const schemaPath = path.join(appDatabaseDirectory, "schema.sql");
+const seedPath = path.join(appDatabaseDirectory, "seed.sql");
+
+fs.mkdirSync(databaseDirectory, { recursive: true });
 
 const db = new sqlite3.Database(databasePath);
 
@@ -1374,11 +1389,11 @@ module.exports = roleMiddleware;
 
 ```
 
-### backend/package.json
+### package.json
 
-**Path:** `backend/package.json`
+**Path:** `package.json`
 
-**Purpose:** Stores project metadata, scripts, and backend dependencies.
+**Purpose:** Stores project metadata, active scripts, and deployment dependencies for the root project.
 
 **Code:**
 
@@ -1533,7 +1548,7 @@ module.exports = router;
 
 **Path:** `backend/server.js`
 
-**Purpose:** Main server file that configures Express, middleware, API routes, static frontend hosting, and server startup.
+**Purpose:** Main server file that configures Express, serves the `public` frontend, exposes API routes, and starts the server after database initialization.
 
 **Code:**
 
@@ -1552,12 +1567,18 @@ const userRoutes = require("./routes/userRoutes");
 const issueRoutes = require("./routes/issueRoutes");
 
 const app = express();
-const frontendPath = path.join(__dirname, "..", "frontend");
+const publicPath = path.join(__dirname, "..", "public");
+const staticPath = path.resolve(publicPath);
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static(frontendPath));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(staticPath, "index.html"));
+});
+
+app.use(express.static(staticPath));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
@@ -1578,19 +1599,24 @@ app.use((request, response) => {
   });
 });
 
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
 
 initializeDatabase()
   .then(() => {
-    app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((error) => {
     console.error("Database initialization failed", error);
+    process.exit(1);
   });
 
 ```
+
+## Frontend File Note
+
+The running application serves frontend files from the `public/` folder. The detailed page explanations below still reference the original `frontend/` source copy because those files match the UI structure. In the current deployed project, the equivalent served files are in `public/`.
 
 ### backend/utils/generateToken.js
 
@@ -4515,4 +4541,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 </html>
 
 ```
-

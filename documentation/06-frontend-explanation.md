@@ -31,6 +31,17 @@ Frontend has:
 - CSS files
 - JavaScript files
 
+## Where Frontend Is Served From
+
+The current application serves frontend files from the `public/` folder.
+
+The `frontend/` folder is kept as the original source/reference copy.
+
+So for architecture understanding:
+
+- `public/` = active served frontend
+- `frontend/` = source/reference copy
+
 ## Important Shared JavaScript Files
 
 ## 1. `api.js`

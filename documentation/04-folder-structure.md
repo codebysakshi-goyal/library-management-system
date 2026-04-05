@@ -15,15 +15,37 @@ When files are placed properly:
 
 ```text
 library-managment-system/
+├── server.js
+├── package.json
+├── package-lock.json
+├── .env.example
 ├── backend/
-├── frontend/
+├── public/
+├── database/
 ├── documentation/
+├── frontend/
 ├── README.md
 ├── report.md
 └── code-explanation.md
 ```
 
 ## Main Meaning of Each Top Folder
+
+### `server.js`
+
+This is the root entry file.
+
+It starts the project by loading the main Express app from the backend folder.
+
+### `package.json`
+
+This is the active project package file.
+
+It contains:
+
+- dependencies
+- start command
+- dev command
 
 ### `backend/`
 
@@ -37,9 +59,9 @@ This part:
 - talks to database
 - sends response
 
-### `frontend/`
+### `public/`
 
-Contains client-side code.
+Contains the frontend files that are actually served by Express.
 
 This part:
 
@@ -47,6 +69,12 @@ This part:
 - accepts user input
 - sends requests to backend
 - displays output
+
+### `frontend/`
+
+Contains the original source/reference copy of the frontend files.
+
+The deployed application currently serves files from `public/`.
 
 ### `documentation/`
 
@@ -62,7 +90,6 @@ backend/
 ├── middleware/
 ├── routes/
 ├── utils/
-├── package.json
 └── server.js
 ```
 
@@ -138,23 +165,33 @@ Contains database-related files.
 
 Files:
 
-- `library.db` -> real SQLite database file
 - `schema.sql` -> creates tables
 - `seed.sql` -> inserts admin seed data
 
-## Frontend Folder Structure
+## Runtime Database Folder
 
 ```text
-frontend/
+database/
+└── library.db
+```
+
+### `database/`
+
+This folder stores the runtime SQLite database file used by the app when `DB_PATH=./database/library.db`.
+
+## Public Folder Structure
+
+```text
+public/
 ├── assets/
 ├── css/
 ├── js/
 ├── *.html
 ```
 
-## Meaning of Frontend Folders
+## Meaning of Public Folders
 
-### `frontend/assets/`
+### `public/assets/`
 
 Stores static assets.
 
@@ -162,7 +199,7 @@ In this project:
 
 - `logo.png`
 
-### `frontend/css/`
+### `public/css/`
 
 Contains page styling files.
 
@@ -177,7 +214,7 @@ Files:
 - `issue.css`
 - `profile.css`
 
-### `frontend/js/`
+### `public/js/`
 
 Contains frontend logic files.
 
@@ -188,7 +225,7 @@ These files:
 - call backend APIs
 - update page content
 
-### `frontend/*.html`
+### `public/*.html`
 
 These are the actual pages opened in browser.
 
@@ -249,7 +286,7 @@ Important pages:
 
 You can explain folder structure like this:
 
-> Frontend folder contains pages, styles, and browser-side JavaScript. Backend folder contains server code, routes, controllers, middleware, database files, and helper utilities.
+> The project starts from the root using `server.js` and `package.json`. The main Express logic is inside `backend`, the actual served frontend is inside `public`, the runtime database file is inside `database`, and the `frontend` folder is kept as the original source copy.
 
 ## Important for Viva
 
@@ -259,4 +296,4 @@ If asked, “Why did you separate routes and controllers?”, answer:
 
 ## Summary
 
-The project follows a clean structure. Frontend handles interface. Backend handles logic. Database folder stores data. Controllers, routes, and middleware are separated properly, which is a strong point in viva.
+The project follows a clean structure. Root files handle startup, backend handles logic, `public` handles the served interface, and the database folder stores runtime data. Controllers, routes, and middleware are separated properly, which is a strong point in viva.

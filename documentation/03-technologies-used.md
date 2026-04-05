@@ -260,9 +260,10 @@ It stores:
 
 ### Where Database Is Stored
 
-Database file:
+Database is used in two related places:
 
-- `backend/database/library.db`
+- active runtime database file: `database/library.db`
+- schema and seed files: `backend/database/schema.sql` and `backend/database/seed.sql`
 
 ### Important for Viva
 

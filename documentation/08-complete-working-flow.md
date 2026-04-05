@@ -15,6 +15,17 @@ This is very useful for viva because many examiners ask:
 
 > Browser page takes user input, JavaScript sends API request, backend checks token and role, controller runs logic, database is updated or read, and result is sent back to frontend.
 
+## Current Runtime Entry Flow
+
+Before user actions begin, the project starts in this order:
+
+1. root `server.js` is executed
+2. it loads `backend/server.js`
+3. backend loads environment variables
+4. database is initialized
+5. Express serves frontend files from `public/`
+6. browser opens the root URL `/`
+
 ## 1. Login Flow
 
 ### Step-by-Step

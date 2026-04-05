@@ -11,9 +11,9 @@ code { background: #ffffff !important; }
 **College:** Post Graduate Government College for Girls, Sector-11, Chandigarh  
 **University:** Panjab University, Chandigarh  
 **Session:** 2024-2025  
-**Project Guide:** Lt. Harpreet Kaur
+**Project Guide:** Lt. Harpreet Kaur  
 **Deployment Platform:** Render  
-**Live Website URL:** `https://your-render-app-url.onrender.com`
+**Live Website URL:** `https://library-management-system-n79m.onrender.com`
 
 ---
 
@@ -113,7 +113,7 @@ Finally, I acknowledge all those who directly or indirectly contributed to the c
 
 ## Project Overview
 
-**Live Website URL:** `https://your-render-app-url.onrender.com`
+**Live Website URL:** `https://library-management-system-n79m.onrender.com`
 
 The **Library Management System** is a web-based application developed to manage the routine activities of a college library in a simple, organized, and efficient manner. The project provides separate access for administrators and students, allowing both types of users to perform their required tasks through a user-friendly interface. The main purpose of the system is to reduce manual paperwork and improve the management of books, student records, and issue-return transactions.
 
@@ -417,10 +417,14 @@ Students can view and update their basic profile details such as name, course, a
 
 # FOLDER STRUCTURE
 
-The project is divided into `backend` and `frontend` sections so that the interface and server logic remain separate. This structure makes the project easier to read, maintain, and explain during presentation or viva.
+The current project structure is deployment-ready from the repository root. The root contains the entry files used by Render, the main Express logic remains inside `backend`, and static frontend pages are served from `public`.
 
 ```text
 library-management-system/
+|-- server.js
+|-- package.json
+|-- package-lock.json
+|-- .env.example
 |-- backend/
 |   |-- config/
 |   |   `-- db.js
@@ -430,7 +434,6 @@ library-management-system/
 |   |   |-- issueController.js
 |   |   `-- userController.js
 |   |-- database/
-|   |   |-- library.db
 |   |   |-- schema.sql
 |   |   `-- seed.sql
 |   |-- middleware/
@@ -443,9 +446,8 @@ library-management-system/
 |   |   `-- userRoutes.js
 |   |-- utils/
 |   |   `-- generateToken.js
-|   |-- package.json
 |   `-- server.js
-|-- frontend/
+|-- public/
 |   |-- assets/
 |   |   `-- logo.png
 |   |-- css/
@@ -460,45 +462,54 @@ library-management-system/
 |   |-- students.html
 |   |-- profile.html
 |   `-- other HTML pages
-|-- plan.md
-`-- report.md
+|-- database/
+|   `-- library.db
+|-- documentation/
+|-- frontend/
+|-- README.md
+|-- report.md
+`-- code-explanation.md
 ```
 
 ## Explanation of Main Folders
 
+### Root files
+
+The root `server.js` file is the deployment entrypoint. The root `package.json` file contains the active scripts such as `npm start` and `npm run dev`. These files allow the project to run directly from the repository root.
+
 ### backend folder
 
-The `backend` folder contains the server-side logic of the application. It manages API routing, authentication, database interaction, and business rules related to books, users, and issue records.
+The `backend` folder contains the actual Express application logic. It manages API routing, authentication, middleware, controllers, and database initialization.
 
 ### routes
 
-The `routes` folder contains route files such as authentication routes, book routes, user routes, and issue routes. These files define the API endpoints and connect them with the appropriate controller functions.
+The `routes` folder contains authentication routes, book routes, user routes, and issue routes. These files define the API endpoints and connect them with controller functions.
 
 ### controllers
 
-The `controllers` folder contains the main processing logic of the system. Each controller handles a specific set of operations such as login, registration, CRUD actions for books, student handling, dashboard summary, issue operations, and return logic.
+The `controllers` folder contains the main processing logic of the system. Each controller handles a specific set of operations such as login, registration, book management, student handling, issue operations, and return logic.
 
-### database files
+### database folders
 
-The `database` folder contains the database file and SQL scripts. It includes the schema for creating tables, the seed script for inserting initial records, and the local database file used by the application.
+The project currently uses two database-related locations for different purposes. The root `database` folder contains the active SQLite database file used at runtime through `DB_PATH`. The `backend/database` folder contains `schema.sql` and `seed.sql`, which are used to create tables and insert initial records.
 
-### views (EJS)
+### public folder
 
-In many Node.js web projects, a `views` folder contains EJS templates for server-side rendering. However, in this project, server-side templates are not used. Instead, the frontend is built with separate static HTML pages, so this role is handled through the `frontend` folder.
-
-### public (CSS/JS)
-
-In many projects, a `public` folder stores static files such as CSS, JavaScript, and images. In this implementation, static assets are organized directly inside the `frontend` folder under subfolders such as `css`, `js`, and `assets`. This keeps the structure simple and suitable for the project level.
+The `public` folder contains the frontend files that are actually served by Express. It includes HTML pages, CSS files, JavaScript files, and image assets.
 
 ### frontend folder
 
-The `frontend` folder contains all user interface files. It includes HTML pages for login, registration, dashboards, book pages, student pages, and profile pages. It also contains CSS files for design and JavaScript files for client-side logic and API communication.
+The `frontend` folder is kept as the original source/reference copy of the UI files. The active deployed frontend is served from the `public` folder.
+
+### documentation folder
+
+The `documentation` folder contains simple notes for learning, viva preparation, and deployment understanding.
 
 ---
 
 # CODE EXPLANATION
 
-The code of the project is organized into a simple and understandable structure so that each part of the system performs a clear function. The backend handles authentication, data processing, validation, and communication with the database. The frontend handles user interaction, page display, and API requests.
+The code of the project is organized into a simple and understandable structure so that each part of the system performs a clear function. The root entry files handle project startup and deployment configuration. The backend handles authentication, data processing, validation, and communication with the database. The frontend files inside `public` handle user interaction, page display, and API requests.
 
 ## Authentication system
 
@@ -699,15 +710,15 @@ function get(query, params = []) {
 
 # HOW TO RUN THIS PROJECT
 
-This project can be executed on a local system by downloading the source code, installing the backend dependencies, and starting the server. The frontend pages are served by the backend itself, which makes the execution process simple and suitable for academic demonstration.
+This project can be executed on a local system by downloading the source code, installing the project dependencies, and starting the server. The frontend pages are served by the backend itself, which makes the execution process simple and suitable for academic demonstration.
 
 The source code may be stored in a GitHub repository. A placeholder repository link is given below and can be replaced later with the actual project link:
 
-**GitHub URL:** `https://github.com/username/library-management-system`
+**GitHub URL:** `https://github.com/codebysakshi-goyal/library-management-system`
 
 ```text
 GitHub Repository:
-https://github.com/username/library-management-system
+https://github.com/codebysakshi-goyal/library-management-system
 
 Steps to Run:
 1. Download or clone the project from the repository.
@@ -734,7 +745,7 @@ The project has been prepared for deployment on **Render**, which is a cloud pla
 - **Application Type:** Web Service
 - **Backend Runtime:** Node.js
 - **Database Used:** SQLite
-- **Live Website URL:** `https://your-render-app-url.onrender.com`
+- **Live Website URL:** `https://library-management-system-n79m.onrender.com`
 
 ## Deployment Process
 
@@ -747,13 +758,13 @@ The deployment process followed for this project is given below:
 5. The start command was set to `npm start`.
 6. The environment variable `JWT_SECRET` was added in Render.
 7. After deployment, Render generated a public website URL.
-8. The application health was verified using the running server response.
+8. The application health was verified using the `/api/health` route.
 
 ## Deployment URL
 
 The deployed project can be accessed using the following public link:
 
-**Website URL:** `https://your-render-app-url.onrender.com`
+**Website URL:** `https://library-management-system-n79m.onrender.com`
 
 ## Default Login Credentials
 
@@ -917,7 +928,7 @@ This page allows users to view and update their personal details maintained in t
 - Online fine payment facility is not included
 - Email or SMS notifications are not implemented
 - Advanced reporting and analytics features are limited
-- The system currently depends on local deployment and setup
+- SQLite is suitable for small-scale use and may need more persistent storage planning for larger production systems
 
 ---
 

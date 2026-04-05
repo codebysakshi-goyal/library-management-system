@@ -52,6 +52,18 @@ That means it has two big parts:
    This is the logic behind the scenes.
    It checks login, stores data, reads data, updates records, and talks to the database.
 
+## Current Project Architecture
+
+The current version of the project starts from the repository root.
+
+- root `server.js` starts the project
+- root `package.json` contains the run scripts
+- `backend/server.js` contains the main Express app
+- `public/` contains the frontend files served in the browser
+- `database/library.db` is used as the runtime database path through environment configuration
+
+So, the project is still full stack, but now it is also deployment-ready from the root folder.
+
 ## Who Uses This Project?
 
 There are two users in this system:

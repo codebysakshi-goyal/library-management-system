@@ -18,7 +18,21 @@ In this project, backend is built using:
 - Express.js
 - SQLite
 
-## Backend Entry File: `server.js`
+## Project Entry Files
+
+This project now has two important startup files.
+
+### Root `server.js`
+
+This is the deployment entry file used by:
+
+- `npm start`
+- `npm run dev`
+- Render deployment
+
+It simply loads the main Express app from `backend/server.js`.
+
+### `backend/server.js`
 
 This is the main backend file.
 
@@ -28,7 +42,8 @@ This is the main backend file.
 - loads environment variables
 - creates Express app
 - enables middleware
-- serves frontend static files
+- serves static frontend files from `public/`
+- serves `index.html` on `/`
 - connects API routes
 - adds health route
 - adds 404 handler
@@ -49,7 +64,7 @@ The following middleware is used:
 - `cors()`
 - `express.json()`
 - `express.urlencoded({ extended: true })`
-- `express.static(frontendPath)`
+- `express.static(staticPath)`
 
 ### 3. Register Routes
 
@@ -63,6 +78,15 @@ These route groups are added:
 ### 4. Start Server
 
 Server starts only after database is initialized successfully.
+
+## Current Backend + Frontend Connection
+
+The backend and frontend are connected like this:
+
+- Express serves HTML, CSS, JS, and assets from `public/`
+- frontend JavaScript calls backend APIs using `/api`
+- backend returns JSON responses
+- browser updates pages using JavaScript
 
 ## What Are Routes?
 

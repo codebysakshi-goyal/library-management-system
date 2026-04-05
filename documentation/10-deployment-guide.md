@@ -36,12 +36,13 @@ This project has already been made deployment-ready.
 Important setup already done:
 
 - `package.json` is available in the project root
+- root `server.js` is available in the project root
 - start command is `npm start`
 - build command can be `npm install`
 - server uses dynamic port with `process.env.PORT`
 - `.gitignore` includes `.env`
 - SQLite database setup is included
-- a basic health route is added
+- a health route is available at `/api/health`
 
 ## Important Words You Should Know
 
@@ -188,19 +189,19 @@ Render will show logs while deploying.
 If everything is correct, the app will become live and Render will generate a public URL like:
 
 ```text
-https://your-render-app-url.onrender.com
+https://library-management-system-n79m.onrender.com
 ```
 
 ## Which URL To Open
 
 This project has two useful URLs:
 
-- Root health URL: `https://your-render-app-url.onrender.com`
-- Main frontend URL: `https://your-render-app-url.onrender.com/app`
+- Main website URL: `https://library-management-system-n79m.onrender.com`
+- Health URL: `https://library-management-system-n79m.onrender.com/api/health`
 
-The root URL is useful because it helps confirm that the server is running.
+The root URL opens the actual website.
 
-The `/app` URL is useful because it opens the actual frontend pages.
+The `/api/health` URL is useful for checking whether the server is running.
 
 ## What To Write In Report And README
 
@@ -213,7 +214,7 @@ After deployment, replace the placeholder URL with your actual Render URL in:
 Example:
 
 ```text
-https://library-management-system-abc.onrender.com
+https://library-management-system-n79m.onrender.com
 ```
 
 ## Common Beginner Mistakes
@@ -258,14 +259,12 @@ That is why the server must use:
 const PORT = process.env.PORT || 5000;
 ```
 
-### 5. Expecting Root URL To Show Full Website
+### 5. Forgetting The Health Route
 
 In this project:
 
-- `/` returns a simple running message
-- `/app` opens the actual website
-
-This was done to keep deployment health checks simple.
+- `/` opens the actual website
+- `/api/health` is the health-check route
 
 ## How To Explain Deployment In Viva
 
@@ -289,4 +288,4 @@ If you remember only the most important things, remember these:
 - build command is `npm install`
 - start command is `npm start`
 - important environment variable is `JWT_SECRET`
-- public frontend opens on `/app`
+- public frontend opens on `/`

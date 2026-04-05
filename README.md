@@ -5,7 +5,7 @@ This is a simple full stack Library Management System made for a BCA third-year 
 ## Live Demo
 
 - Deployment Platform: Render
-- Live URL: `https://your-render-app-url.onrender.com`
+- Live URL: `https://library-management-system-n79m.onrender.com`
 
 ## Tech Stack
 
@@ -17,11 +17,26 @@ This is a simple full stack Library Management System made for a BCA third-year 
 ## Project Structure
 
 ```text
+server.js
+package.json
 backend/
+public/
+database/
+documentation/
 frontend/
-plan.md
 README.md
+report.md
 ```
+
+## Current Architecture
+
+- Root `server.js` is the deployment entrypoint.
+- Root `package.json` contains the active scripts for local run and Render deployment.
+- `backend/server.js` contains the main Express application.
+- `public/` contains the frontend files actually served by Express.
+- `frontend/` is kept as the original source/reference copy of the UI files.
+- `database/library.db` is the active runtime database path when `DB_PATH=./database/library.db`.
+- `backend/database/schema.sql` and `backend/database/seed.sql` are used for initialization.
 
 ## Main Features
 
@@ -74,7 +89,7 @@ PORT=5051 npm start
 4. Open this URL in browser:
 
 ```text
-http://localhost:5051/app
+http://localhost:5051
 ```
 
 ## Deployment
@@ -82,12 +97,13 @@ http://localhost:5051/app
 - Platform used: Render
 - Build command: `npm install`
 - Start command: `npm start`
-- Live URL placeholder: `https://your-render-app-url.onrender.com`
+- Live URL: `https://library-management-system-n79m.onrender.com`
+- Health URL: `https://library-management-system-n79m.onrender.com/api/health`
 - Required environment variable: `JWT_SECRET=your-secret-value`
 
 ## Database
 
-- Database file: `backend/database/library.db`
+- Active database file: `database/library.db`
 - Schema file: `backend/database/schema.sql`
 - Seed file: `backend/database/seed.sql`
 

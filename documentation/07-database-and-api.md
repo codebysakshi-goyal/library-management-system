@@ -24,9 +24,14 @@ Database makes the project permanent and structured.
 
 ## Database Files
 
-Inside `backend/database/`:
+This project uses database files in two places.
 
-- `library.db` -> actual database file
+### `database/`
+
+- `library.db` -> actual runtime database file
+
+### `backend/database/`
+
 - `schema.sql` -> creates tables
 - `seed.sql` -> inserts default admin
 
@@ -178,7 +183,7 @@ This is useful for testing and viva demo.
 
 You can say:
 
-> The database is initialized automatically. Tables are created if they do not exist, and sample data is inserted for testing and demonstration.
+> The database is initialized automatically. Tables are created if they do not exist, and sample data is inserted for testing and demonstration. The runtime database file is `database/library.db`, while schema and seed files are kept inside `backend/database`.
 
 ## API Basics
 

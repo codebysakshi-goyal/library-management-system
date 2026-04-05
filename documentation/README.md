@@ -32,3 +32,10 @@ After reading all files, you should understand:
 ## Important Note
 
 These notes are written in very simple language and are based on the actual code present in your project.
+
+Current structure note:
+
+- root `server.js` and `package.json` are used to start the project
+- `backend/` contains the main Express logic
+- `public/` contains the frontend files actually served by the app
+- `frontend/` is kept as the original source/reference copy
